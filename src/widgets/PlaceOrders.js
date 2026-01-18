@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { limitOrderHandler } from '../HelperClasses/api';
 import './PlaceOrders.css';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('PlaceOrders');
 
 export const LimitOrdersWidget = ({ selectedStock }) => {
     const [price, setPrice] = useState('');
@@ -9,7 +12,7 @@ export const LimitOrdersWidget = ({ selectedStock }) => {
 
     const handleBuy = () => {
         if (!selectedStock) {
-            console.error('❌ No stock selected for buying.');
+            log.warn('No stock selected for buying');
             return;
         }
 
@@ -18,14 +21,16 @@ export const LimitOrdersWidget = ({ selectedStock }) => {
             setSubscribeVar,
         );
 
-        console.log(
-            `🟢 Buy order placed for ${amount} shares of ${selectedStock} at ${price || 'market price'}.`,
-        );
+        log.info('Buy limit order placed', {
+            selectedStock,
+            amount,
+            price: price || 'market price',
+        });
     };
 
     const handleSell = () => {
         if (!selectedStock) {
-            console.error('❌ No stock selected for selling.');
+            log.warn('No stock selected for selling');
             return;
         }
 
@@ -34,9 +39,11 @@ export const LimitOrdersWidget = ({ selectedStock }) => {
             setSubscribeVar,
         );
 
-        console.log(
-            `🔴 Sell order placed for ${amount} shares of ${selectedStock} at ${price || 'market price'}.`,
-        );
+        log.info('Sell limit order placed', {
+            selectedStock,
+            amount,
+            price: price || 'market price',
+        });
     };
 
     return (

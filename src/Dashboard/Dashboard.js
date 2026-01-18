@@ -3,6 +3,9 @@ import './Dashboard.css';
 import AuthenticationInput from '../widgets/AuthenticationInput.js';
 import samplePnlData from '../SampleData/samplePnlData.json';
 import { getTickers } from '../HelperClasses/api';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('Dashboard');
 
 const Dashboard = () => {
     const [selectedStock, setSelectedStock] = useState('AAPL');
@@ -19,7 +22,7 @@ const Dashboard = () => {
 
                 if (validTickers.length > 0) setTickers(validTickers);
             } catch (error) {
-                console.error('Error fetching tickers:', error);
+                log.error('Error fetching tickers', error);
                 setTickers([]); // Default to empty array on error
             }
         };

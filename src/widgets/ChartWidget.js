@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import './ChartWidget.css';
 import CandlestickTracker from '../HelperClasses/CandlestickTracker';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('ChartWidget');
 
 const ChartWidget = ({ selectedStock }) => {
     const [candlestickData, setCandlestickData] = useState([]);
@@ -9,8 +12,10 @@ const ChartWidget = ({ selectedStock }) => {
     useEffect(() => {
         // Function to update chart when new data is available
         const updateChartData = (allData) => {
-            console.log('📊 Full CandlestickTracker Data:', allData); // Log all data for debugging
-            console.log('Selected Stock', selectedStock);
+            log.debug('Candlestick data update', {
+                selectedStock,
+                tickers: allData ? Object.keys(allData) : [],
+            });
             if (allData[selectedStock] && allData[selectedStock].length > 0) {
                 const formattedData = allData[selectedStock]
                     .filter((candle) => candle.x && candle.y?.length === 4) // Ensure valid entries
@@ -19,10 +24,13 @@ const ChartWidget = ({ selectedStock }) => {
                         y: [...candle.y], // Copy OHLC values
                     }));
 
-                console.log(`🔄 Updating Chart for ${selectedStock}:`, formattedData);
+                log.debug('Updating chart series', {
+                    selectedStock,
+                    points: formattedData.length,
+                });
                 setCandlestickData(formattedData);
             } else {
-                console.warn(`⚠ No valid data available for ${selectedStock}`);
+                log.warn('No valid candlestick data available', { selectedStock });
                 setCandlestickData([]); // Clear chart if no data is available
             }
         };
