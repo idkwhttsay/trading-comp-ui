@@ -1,115 +1,113 @@
-
-
 /* Container for the entire order book */
 .order-book-widget {
-  width: auto;               /* adjust as needed */
-  margin: 0 auto;            /* center horizontally */
-  font-family: 'Roboto', sans-serif !important;    
-  background-color: #1a1a1a;  
-  color: #ffffff;
-  border: 1px solid #444;
-  border-radius: 4px;
-  padding-bottom: 8px;
+    width: auto; /* adjust as needed */
+    margin: 0 auto; /* center horizontally */
+    font-family: 'Roboto', sans-serif !important;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding-bottom: 8px;
 }
 
 /* The single row that labels the columns (Price, Quantity, Orders) */
 .column-headers {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: 'Roboto', sans-serif !important;
-  background-color: #242424;
-  border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif !important;
+    background-color: #242424;
+    border-bottom: 1px solid #444;
 }
 
 /* Price header */
 .column-headers .price-header {
-  flex: 1;
-  text-align: left;
-  color: #d32f2f;       /* Red for Price header */
-  font-family: 'Roboto', sans-serif !important;
+    flex: 1;
+    text-align: left;
+    color: #d32f2f; /* Red for Price header */
+    font-family: 'Roboto', sans-serif !important;
 }
 
 /* Quantity header */
 .column-headers .quantity-header {
-  flex: 1;
-  text-align: center;  /* center the quantity column, if desired */
-  color: #29b6f6;      /* Blue for Quantity header */
-  font-family: 'Roboto', sans-serif !important;
+    flex: 1;
+    text-align: center; /* center the quantity column, if desired */
+    color: #29b6f6; /* Blue for Quantity header */
+    font-family: 'Roboto', sans-serif !important;
 }
 
 /* Orders header */
 .column-headers .orders-header {
-  flex: 1;
-  text-align: right;
-  color: white;       /* Yellow for Orders header */
-  font-family: 'Roboto', sans-serif !important;
+    flex: 1;
+    text-align: right;
+    color: white; /* Yellow for Orders header */
+    font-family: 'Roboto', sans-serif !important;
 }
 
 /* Each row showing an order (bid or ask) */
 .price-level-widget {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 10px;
-  font-size: 14px;
-  font-family: 'Roboto', sans-serif !important;
-  border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif !important;
+    border-bottom: 1px solid #333;
 }
 
 /* Highlighted Bids (Buys) */
 .price-level-widget.bid {
-  background-color: rgba(41, 182, 246, 0.1); /* Soft blue */
+    background-color: rgba(41, 182, 246, 0.1); /* Soft blue */
 }
 
 /* Highlighted Asks (Sells) */
 .price-level-widget.ask {
-  background-color: rgba(211, 47, 47, 0.1); /* Soft red */
+    background-color: rgba(211, 47, 47, 0.1); /* Soft red */
 }
 
 /* Price column within a row */
 .price-level-widget .price {
-  flex: 1;
-  text-align: left;
-  color: #d32f2f;       /* Red for Price data */
-  font-family: 'Roboto', sans-serif !important;
+    flex: 1;
+    text-align: left;
+    color: #d32f2f; /* Red for Price data */
+    font-family: 'Roboto', sans-serif !important;
 }
 
 /* Quantity column within a row */
 .price-level-widget .quantity {
-  flex: 1;
-  text-align: center;  /* center the quantity column, if desired */
-  color: #29b6f6;       /* Blue for Quantity data */
-  font-family: 'Roboto', sans-serif !important;
+    flex: 1;
+    text-align: center; /* center the quantity column, if desired */
+    color: #29b6f6; /* Blue for Quantity data */
+    font-family: 'Roboto', sans-serif !important;
 }
 
 /* Orders column within a row */
 .price-level-widget .orders {
-  flex: 1;
-  text-align: right;
-  color: #fdd835;       /* Yellow for Orders data */
-  font-family: 'Roboto', sans-serif !important;
+    flex: 1;
+    text-align: right;
+    color: #fdd835; /* Yellow for Orders data */
+    font-family: 'Roboto', sans-serif !important;
 }
 
 /* Remove bottom border for the last row */
 .price-level-widget:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 /* Optional styling for the stock dropdown */
 .stock-selector {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 6px;
-  margin: 10px 0;
-  background-color: #1a1a1a;
-  color: #ffffff;
-  border: 1px solid #444;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  font-family: 'Roboto', sans-serif !important;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px;
+    margin: 10px 0;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif !important;
 }

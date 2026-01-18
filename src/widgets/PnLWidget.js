@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import userPortfolio from "../HelperClasses/UserPortfolio";
-import "./PnLWidget.css";
+import React, { useEffect, useState } from 'react';
+import userPortfolio from '../HelperClasses/UserPortfolio';
+import './PnLWidget.css';
 
 const PnLWidget = () => {
     const [pnl, setPnl] = useState(0);

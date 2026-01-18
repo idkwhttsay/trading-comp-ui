@@ -26,11 +26,12 @@
     font-size: 0.9rem; /* Smaller text in button */
     border-radius: 20px; /* Sleeker rounded button */
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
 }
 
 .profile-widget button:hover {
     background-color: rgba(255, 0, 0, 0.6); /* Slightly more solid red on hover */
     transform: scale(1.05); /* Slight button size increase on hover */
 }
-

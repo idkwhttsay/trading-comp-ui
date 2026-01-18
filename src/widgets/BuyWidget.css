@@ -1,20 +1,20 @@
 .container {
     text-align: center;
-  }
-  
-  .stock-info {
+}
+
+.stock-info {
     font-size: 1.2rem;
     margin-bottom: 10px;
-  }
-  
-  .button-container {
+}
+
+.button-container {
     padding: 10px;
     display: flex;
     gap: 20px;
     justify-content: center;
-  }
-  
-  .button {
+}
+
+.button {
     border: none;
     border-radius: 12px; /* Rounded corners */
     padding: 10px 25px; /* Size of the button */
@@ -22,36 +22,36 @@
     color: white; /* Text color */
     cursor: pointer;
     font-weight: bold;
-  }
+}
 
-  .complete-order {
+.complete-order {
     background-color: #68f068; /* Light green */
     width: 100%;
-  }
-  
-  .buy {
-    background-color: #49d849; /* Light green */
-  }
-  
-  .sell {
-    background-color: #ff3e1c; /* Light red */
-  }
-  
-  .button:hover {
-    opacity: 0.9; /* Slight hover effect */
-  }
-  
-  .button:active {
-    transform: scale(0.95); /* Shrink on click */
-  }
+}
 
-  .modal {
+.buy {
+    background-color: #49d849; /* Light green */
+}
+
+.sell {
+    background-color: #ff3e1c; /* Light red */
+}
+
+.button:hover {
+    opacity: 0.9; /* Slight hover effect */
+}
+
+.button:active {
+    transform: scale(0.95); /* Shrink on click */
+}
+
+.modal {
     position: absolute;
     transform: translateX(-50%); /* Center the modal horizontally */
     z-index: 1000;
-  }
-  
-  .modal-box {
+}
+
+.modal-box {
     position: relative;
     background-color: rgb(0, 0, 0);
     border-radius: 12px;
@@ -61,10 +61,10 @@
     min-width: 200px;
     width: 215px;
     height: 335px;
-  }
-  
-  /* Triangle pointing to the button */
-  .triangle {
+}
+
+/* Triangle pointing to the button */
+.triangle {
     position: absolute;
     top: -10px;
     left: 50%;
@@ -74,36 +74,36 @@
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid rgb(0, 0, 0);
-  }
-  .modal-content {
+}
+.modal-content {
     text-align: left;
     margin-top: 0px;
-  }
-  p {
+}
+p {
     margin: 0px;
-  }
+}
 
-  .price-span {
+.price-span {
     font-weight: normal;
-  }
+}
 
-  .price-change-positive {
+.price-change-positive {
     color: #2e8b57;
-  }
+}
 
-  .price-change-negative {
+.price-change-negative {
     color: #b22222;
-  }
+}
 
-  /* Order Type Buttons */
+/* Order Type Buttons */
 .order-type-toggle {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 5px;
-  }
-  
-  .order-btn {
+}
+
+.order-btn {
     padding: 8px 15px;
     width: 100%;
     border: 1px solid #000000;
@@ -113,34 +113,34 @@
     font-weight: bold;
     color: #ffffff;
     transition: background-color 0.3s;
-  }
-  
-  .order-btn:hover {
+}
+
+.order-btn:hover {
     background-color: #f0f0f0;
-  }
-  
-  .order-btn.active {
+}
+
+.order-btn.active {
     background-color: #68f068; /* Light green background when active */
-  }
-  .divider {
+}
+.divider {
     width: 5px; /* Make the divider thin */
     height: 20px; /* Control the height of the divider */
     background-color: #333; /* Color of the divider */
     margin: 0 5px; /* Padding to space the divider */
-  }
+}
 
-  .quantity-input-container {
+.quantity-input-container {
     margin-top: 1px;
     display: flex;
     flex-direction: column;
-  }
-  
-  .quantity-label {
+}
+
+.quantity-label {
     font-size: 1rem;
     margin-bottom: 2px;
-  }
-  
-  .quantity-input {
+}
+
+.quantity-input {
     padding: 8px;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -149,13 +149,12 @@
     width: 90%;
     max-width: 200px; /* Controls input width */
     margin-bottom: 5px;
-  }
-  
-  .quantity-input:focus {
+}
+
+.quantity-input:focus {
     outline: none;
-  }
+}
 
-  .hidden {
+.hidden {
     visibility: hidden;
-  }
-
+}

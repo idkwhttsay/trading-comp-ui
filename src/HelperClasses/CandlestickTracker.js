@@ -1,3 +1,7 @@
+import { createLogger } from '../util/logger';
+
+const log = createLogger('CandlestickTracker');
+
 class CandlestickTracker {
     constructor() {
         this.tickerCandlesticks = new Map(); // Stores candlestick data per ticker
@@ -16,10 +20,10 @@ class CandlestickTracker {
 
         this.tickerCandlesticks.get(ticker).push({
             x: new Date(ohlc.timestamp), // Use the provided timestamp
-            y: [ohlc.open, ohlc.high, ohlc.low, ohlc.close] // Store OHLC values
+            y: [ohlc.open, ohlc.high, ohlc.low, ohlc.close], // Store OHLC values
         });
 
-        console.log(`🕯️ Inserted Candlestick for ${ticker}:`, ohlc);
+        log.debug('Inserted candlestick', { ticker, ohlc });
 
         // Notify subscribers after inserting new candlestick
         this.notifySubscribers();
@@ -66,9 +70,10 @@ class CandlestickTracker {
      * Notifies all subscribers when data is updated.
      */
     notifySubscribers() {
-        this.subscribers.forEach(callback => callback(this.getAllCandlestickData()));
+        this.subscribers.forEach((callback) => callback(this.getAllCandlestickData()));
     }
 }
 
 // Export a singleton instance
-export default new CandlestickTracker();
+const candlestickTracker = new CandlestickTracker();
+export default candlestickTracker;

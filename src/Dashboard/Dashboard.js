@@ -1,109 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Dashboard.css";
-import StockWidget from "../widgets/StockWidget.js";
-import AuthenticationInput from "../widgets/AuthenticationInput.js";
-import EquitiesDashboard from "../widgets/EquityDashboard.js";
-import ChartWidget from "../widgets/ChartWidget.js";
-import PlaceOrdersWidget from "../widgets/PlaceOrders.js";
-import Contestdash from "../widgets/Contestdash.js";
-import TradeTable from "../widgets/TradeTable.js";
-import RecentOrdersWidget from "../widgets/RecentOrdersWidget.js";
-import samplePnlData from "../SampleData/samplePnlData.json";
-import BuyButton from "../widgets/BuySellWidget.js";
-import OrderBookWidget from "../widgets/OrderBookWidgetss.js";
-import ImageDisplayWidget from "../widgets/ImageDisplayWidget.js";
-import PnLDashBoard from "../widgets/PnLWidget.js";
-import AuctionWidget from "../widgets/AuctionWidget.js";
-import ErrorBoundary from "./ErrorBoundary"
+import React, { useEffect, useMemo, useState } from 'react';
+import './Dashboard.css';
+import AuthenticationInput from '../widgets/AuthenticationInput.js';
+import samplePnlData from '../SampleData/samplePnlData.json';
+import { getTickers } from '../HelperClasses/api';
 
 const Dashboard = () => {
-    const [selectedStock, setSelectedStock] = useState("AAPL");
-    const [text, setText] = useState(""); // Store input value
+    const [selectedStock, setSelectedStock] = useState('AAPL');
     const [tickers, setTickers] = useState([]);
-    const [message, setMessage] = useState(""); // Store message to display
-    const predefinedNumber = "12345"; // The number to match with
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [orders, setOrders] = useState([]);
+
     useEffect(() => {
         let interval;
-        const fetchTickers = async() => {
+        const fetchTickers = async () => {
             try {
-                const fetchedTickers = await getTickers();
-                console.log("Raw fetched tickers:", fetchedTickers);
+                const fetchedTickers = getTickers();
+                const validTickers = Array.isArray(fetchedTickers)
+                    ? fetchedTickers.filter((ticker) => typeof ticker === 'string')
+                    : [];
 
-                // Ensure tickers is always an array of strings
-                if (!Array.isArray(fetchedTickers)) {
-                    console.error("getTickers() did not return an array:", fetchedTickers);
-                    setTickers([]); // Default to empty array
-                    return;
-                }
-
-                // Filter out any non-string values
-                const validTickers = fetchedTickers.filter(ticker => typeof ticker === "string");
-
-                if (validTickers.length > 0) {
-                    setTickers(validTickers);
-                    clearInterval(interval); // Stop polling once valid data is received
-                } else {
-                    console.warn("No valid tickers found.");
-                }
+                if (validTickers.length > 0) setTickers(validTickers);
             } catch (error) {
-                console.error("Error fetching tickers:", error);
+                console.error('Error fetching tickers:', error);
                 setTickers([]); // Default to empty array on error
             }
         };
         interval = setInterval(fetchTickers, 3000);
         return () => clearInterval(interval);
     }, []);
-    const handleStockClick = (stock) => {
-        setSelectedStock(stock);
-    };
-    // Filter orders for the selected stock
-    useEffect(() => {
-        const filteredOrders = samplePnlData.filter(
-            (order) => typeof order.ticker === "string" && order.ticker === selectedStock
+
+    const ordersForSelected = useMemo(() => {
+        return samplePnlData.filter(
+            (order) => typeof order.ticker === 'string' && order.ticker === selectedStock,
         );
-        setOrders(filteredOrders);
-    }, []);
+    }, [selectedStock]);
 
-    const handleInputSubmit = (data) => {
-        setText(data);
-        if (data === predefinedNumber) {
-            setMessage("John Doe | GATech | #001");
-        } else {
-            setMessage("Sorry, that's not the correct number.");
-        }
-        setIsSubmitted(true);
-    };
+    // Placeholder for a future user-info submission widget.
+    // Keeping the state here so existing UI behavior remains unchanged.
 
-    return ( <div className = "dashboard">
-        <div className = "column-1" > { /* USER AUTHENTICATION AND USER INFO */ } 
-        <div className = "widget user-info">
-        User Authentication {!isSubmitted && <AuthenticationInput/> } 
-            <p>    
-                { message } 
-            </p> 
-        </div>
+    return (
+        <div className="dashboard">
+            <div className="column-1">
+                <div className="widget user-info">
+                    <h3>User Authentication</h3>
+                    <AuthenticationInput />
+                </div>
 
-        { /* RECENT ORDERS WIDGET (COMMENTED OUT, UNCOMMENT IF NEEDED) */ } {
-            /* 
-                        <div className="widget recent-orders">
-                            Open Orders
-                            <RecentOrdersWidget orders={orders} />
-                        </div>
-                        */
-        }
-
-        { /* CONTEST DASHBOARD (COMMENTED OUT, UNCOMMENT IF NEEDED) */ } {
-            /*
-                        <div className="widget contest-info">
-                            Contest Information
-                            <Contestdash />
-                        </div>
-                        */
-        }
-        </div>
+                <div className="widget">
+                    <h3>Tickers</h3>
+                    <div className="tickers">
+                        {tickers.length === 0 ? (
+                            <p>Waiting for tickers…</p>
+                        ) : (
+                            tickers.map((ticker) => (
+                                <button
+                                    key={ticker}
+                                    type="button"
+                                    onClick={() => setSelectedStock(ticker)}
+                                    className={ticker === selectedStock ? 'selected' : ''}
+                                >
+                                    {ticker}
+                                </button>
+                            ))
+                        )}
+                    </div>
+                    <p>Selected: {selectedStock}</p>
+                    <p>Sample orders: {ordersForSelected.length}</p>
+                </div>
+            </div>
         </div>
     );
 };

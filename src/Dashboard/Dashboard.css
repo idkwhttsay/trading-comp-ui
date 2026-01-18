@@ -1,71 +1,72 @@
 /* For the entire scroll bar */
 ::-webkit-scrollbar {
-  width: 8px; 
-  background-color: rgba(0, 0, 0, 0); 
+    width: 8px;
+    background-color: rgba(0, 0, 0, 0);
 }
 
 /* For the scrollbar track */
 ::-webkit-scrollbar-track {
-  background: rgb(36, 36, 36); /* Background of the scrollbar track */
-  /*border-radius: 10px;  Rounded edges for the scrollbar track */
-  border-radius: 15px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+    background: rgb(36, 36, 36); /* Background of the scrollbar track */
+    /*border-radius: 10px;  Rounded edges for the scrollbar track */
+    border-radius: 15px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
 }
 
 /* For the scrollbar thumb (scrolling handle) */
 ::-webkit-scrollbar-thumb {
-  background-color: #444; /* Black scrollbar thumb */
-  /*border-radius: ; Rounded edges for the scrollbar thumb */ 
-  border-radius: 15px;
+    background-color: #444; /* Black scrollbar thumb */
+    /*border-radius: ; Rounded edges for the scrollbar thumb */
+    border-radius: 15px;
 }
 
 /* For scrollbar on hover (optional) */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: black; /* Slightly lighter black when hovered */
+    background-color: black; /* Slightly lighter black when hovered */
 }
 
-html, body {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  background-color: black;
+html,
+body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-color: black;
 }
 
 .dashboard {
-  display: flex;
-  gap: 5px;
-  padding: 5px;
-  box-sizing: border-box;
-  height: calc(100vh - 10px);
-  width: calc(100% - 15px);
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+    height: calc(100vh - 10px);
+    width: calc(100% - 15px);
 }
 
 .column-1 {
-  flex: 0 0 25%;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  flex-shrink: 0; /* Prevents shrinking and forces exact width */
-  box-sizing: border-box;
+    flex: 0 0 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0; /* Prevents shrinking and forces exact width */
+    box-sizing: border-box;
 }
 
 .column-3 {
-  flex: 0 0 25%;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0; /* Prevents it from resizing */
-  overflow: hidden; /* Ensures no extra content overflows */
-  box-sizing: border-box;
+    flex: 0 0 25%;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* Prevents it from resizing */
+    overflow: hidden; /* Ensures no extra content overflows */
+    box-sizing: border-box;
 }
 
 .column-2 {
-  flex: 0 0 50%;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  flex-shrink: 0;
+    flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0;
 }
 
 .widget {
@@ -85,83 +86,83 @@ Column 1
 **/
 
 .pnl-widget-wrapper {
-  height: 15%;
+    height: 15%;
 }
 
 .Profile-Features {
-  height: 20%; /* Parent container height */
-  display: flex;
-  flex-direction: row; /* Keep widgets in a horizontal row */
-  gap: 2px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-  padding: 3px;
+    height: 20%; /* Parent container height */
+    display: flex;
+    flex-direction: row; /* Keep widgets in a horizontal row */
+    gap: 2px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    padding: 3px;
 }
 
-.auctionWidget, .profileWidget {
-  width: 50%; /* Adjust the width to fit both widgets horizontally */
-  height: 100%; /* Ensure they fill the available height */
+.auctionWidget,
+.profileWidget {
+    width: 50%; /* Adjust the width to fit both widgets horizontally */
+    height: 100%; /* Ensure they fill the available height */
 }
 
 .messageViewer {
-  height: 20%;
+    height: 20%;
 }
 
-
 .equities {
-  height: 30%;
-  gap: 2px;
+    height: 30%;
+    gap: 2px;
 }
 
 .team-logo {
-  height: 10%;
+    height: 10%;
 }
 
 .pnl-dashboard {
-  height: 10%;
+    height: 10%;
 }
 /**
 Column 2
 **/
 
 .position-info .widget-container {
-  display: flex;
-  width: 100%;
+    display: flex;
+    width: 100%;
 }
 
 .position-info .widget-item {
-  padding: 10px;
+    padding: 10px;
 }
 
-.selected-stock, .order-type {
-  width: 20%; 
-  height: 100%;
+.selected-stock,
+.order-type {
+    width: 20%;
+    height: 100%;
 }
 
 .place-orders {
-  width: 60%; /* 60% width for the third widget */
+    width: 60%; /* 60% width for the third widget */
 }
 
 .chart {
-  height: 50%;
+    height: 50%;
 }
 
 .position-info {
-  height: 15%;
-
+    height: 15%;
 }
 
 .trade-table {
-  height: 35%;
-  overflow-y: auto;
+    height: 35%;
+    overflow-y: auto;
 }
 /**
 Column 3
 **/
 .order-book {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 /**
 row
