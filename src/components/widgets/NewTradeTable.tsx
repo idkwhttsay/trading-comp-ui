@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import './TradeTable.css';
-import { removeHandler } from '../../lib/api.js';
+import { removeHandler } from '../../lib/api';
 import { createLogger } from '../../utils/logger';
 import { usePortfolio } from '../../app/providers';
 
@@ -8,8 +8,8 @@ const log = createLogger('NewTradeTable');
 
 const TradeTable = () => {
     const portfolio = usePortfolio();
-    const positions = portfolio?.positions || {};
-    const openOrders = useMemo(() => portfolio?.Orders || [], [portfolio]);
+    const positions = (portfolio?.positions || {}) as Record<string, any>;
+    const openOrders = useMemo(() => (portfolio as any)?.Orders || [], [portfolio]);
 
     const handleRemoveOrder = (orderId) => {
         log.info('Removing order', { orderId });
@@ -38,8 +38,8 @@ const TradeTable = () => {
                                     <tr key={`position-${index}`}>
                                         <td>{ticker}</td>
                                         <td>{}</td>
-                                        <td>{details.averagePrice}</td>
-                                        <td>{details.quantity}</td>
+                                        <td>{(details as any)?.averagePrice}</td>
+                                        <td>{(details as any)?.quantity}</td>
                                     </tr>
                                 ))
                             ) : (

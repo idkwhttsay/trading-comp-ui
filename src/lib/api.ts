@@ -28,10 +28,17 @@ export const ErrorCodes = Object.freeze({
     INSUFFICIENT_BALANCE: 7,
 });
 
-let messages = [];
+let messages: Array<{ errorMessage: string; errorCode?: number }> = [];
 
 class AsyncAPICall {
-    constructor(path, dependency) {
+    public path: string;
+    public data: any;
+    public promise: Promise<any>;
+    public subscriber: (val: number) => void;
+    public dependency: AsyncAPICall | null;
+    public counter: number;
+
+    constructor(path: string, dependency: AsyncAPICall | null) {
         this.path = path;
         this.data = null;
         this.promise = Promise.resolve();
@@ -40,11 +47,11 @@ class AsyncAPICall {
         this.counter = 0;
     }
 
-    setSubscriber(callbackFunction) {
+    setSubscriber(callbackFunction: (val: number) => void) {
         this.subscriber = callbackFunction;
     }
 
-    async requestHelper(form) {
+    async requestHelper(form?: Record<string, unknown>) {
         const requestBody = { ...(form || {}) };
 
         if (this.dependency !== null) {
@@ -95,7 +102,7 @@ class AsyncAPICall {
         this.subscriber(this.counter);
     }
 
-    request(form) {
+    request(form?: Record<string, unknown>) {
         this.promise = this.requestHelper(form);
         return this.promise;
     }

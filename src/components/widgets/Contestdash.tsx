@@ -1,6 +1,6 @@
 import React from 'react';
 import './Contestdash.css';
-import Announcement from './Announcement.js';
+import Announcement from './Announcement';
 import DataFinder from '../../lib/DataFinder';
 
 const Contestdash = () => {

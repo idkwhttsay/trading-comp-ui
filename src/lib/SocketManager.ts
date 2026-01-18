@@ -32,6 +32,15 @@ function buildBrokerUrl({ sessionToken, username }) {
 }
 
 class SocketManager {
+    public stompClient: Client | null;
+    public connected: boolean;
+
+    private lastAppliedSeq: number | null;
+    private seqBuffer: SeqBuffer;
+    private pendingBySeq: Map<number, unknown>;
+    private gapFillInProgress: boolean;
+    private needsResnapshot: boolean;
+
     constructor() {
         this.stompClient = null;
         this.connected = false;

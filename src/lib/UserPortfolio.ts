@@ -5,6 +5,15 @@ import { PortfolioMessageSchema } from '../domain/schemas';
 const log = createLogger('UserPortfolio');
 
 class UserPortfolio {
+    private data: {
+        balance: number;
+        pnl: number;
+        positions: Record<string, unknown>;
+        username: string | null;
+        Orders: Array<Record<string, unknown>>;
+    };
+    private subscribers: Array<(data: UserPortfolio['data']) => void>;
+
     constructor() {
         this.data = {
             balance: 0,
@@ -17,24 +26,25 @@ class UserPortfolio {
     }
 
     // Subscribe to changes
-    subscribe(callback) {
+    subscribe(callback: (data: UserPortfolio['data']) => void) {
         if (typeof callback === 'function') {
             this.subscribers.push(callback);
         }
     }
 
     // Unsubscribe from changes
-    unsubscribe(callback) {
+    unsubscribe(callback: (data: UserPortfolio['data']) => void) {
         this.subscribers = this.subscribers.filter((sub) => sub !== callback);
     }
 
     // Notify all subscribers
     _notifySubscribers() {
-        this.subscribers.forEach((callback) => callback(this.data));
+        const snapshot = this.getPortfolio();
+        this.subscribers.forEach((callback) => callback(snapshot));
     }
 
     // Update portfolio and notify subscribers
-    updatePortfolio(message) {
+    updatePortfolio(message: unknown) {
         const validated = safeParse(PortfolioMessageSchema, message, {
             source: 'portfolio-update',
         });
@@ -60,7 +70,7 @@ class UserPortfolio {
             this.data.username = username;
         }
         if (Orders && typeof Orders === 'object') {
-            let orderList = [];
+            const orderList: Array<Record<string, unknown>> = [];
             Object.keys(Orders).forEach((ticker) => {
                 Orders[ticker].forEach((order) => {
                     orderList.push({ ...order, ticker });
@@ -76,7 +86,11 @@ class UserPortfolio {
     }
 
     getPortfolio() {
-        return { ...this.data };
+        return {
+            ...this.data,
+            positions: { ...(this.data.positions || {}) },
+            Orders: Array.isArray(this.data.Orders) ? [...this.data.Orders] : [],
+        };
     }
 }
 

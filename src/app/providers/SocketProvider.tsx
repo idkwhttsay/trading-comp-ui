@@ -1,9 +1,17 @@
 import React, { createContext, useContext, useMemo, useState, useCallback } from 'react';
 import socketManager from '../../lib/SocketManager';
 
-const SocketContext = createContext(null);
+type SocketContextValue = {
+    connect: () => Promise<void>;
+    disconnect: () => void;
+    isConnected: boolean;
+    isReady: () => boolean;
+    sendMessage: (destination: string, body: unknown) => void;
+};
 
-export function SocketProvider({ children }) {
+const SocketContext = createContext<SocketContextValue | undefined>(undefined);
+
+export function SocketProvider({ children }: { children: React.ReactNode }) {
     const [isConnected, setIsConnected] = useState(() => Boolean(socketManager?.connected));
 
     const connect = useCallback(async () => {

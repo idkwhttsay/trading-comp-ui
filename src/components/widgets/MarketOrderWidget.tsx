@@ -6,7 +6,7 @@ import { createLogger } from '../../utils/logger';
 const log = createLogger('MarketOrderWidget');
 
 const MarketOrdersWidget = ({ selectedStock }) => {
-    const [amount, setAmount] = useState(10);
+    const [amount, setAmount] = useState<number | ''>(10);
     const [, setSubscribeVar] = useState(0);
 
     const handleBuy = () => {
@@ -15,7 +15,10 @@ const MarketOrdersWidget = ({ selectedStock }) => {
             return;
         }
 
-        marketOrderHandler({ ticker: selectedStock, volume: amount, isBid: true }, setSubscribeVar);
+        marketOrderHandler(
+            { ticker: selectedStock, volume: amount === '' ? 0 : amount, isBid: true },
+            setSubscribeVar,
+        );
 
         log.info('Buy market order placed', { selectedStock, amount });
     };
@@ -27,7 +30,7 @@ const MarketOrdersWidget = ({ selectedStock }) => {
         }
 
         marketOrderHandler(
-            { ticker: selectedStock, volume: amount, isBid: false },
+            { ticker: selectedStock, volume: amount === '' ? 0 : amount, isBid: false },
             setSubscribeVar,
         );
 

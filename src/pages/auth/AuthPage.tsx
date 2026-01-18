@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { buildupHandler, getBuildupData, HTTPStatusCodes } from '../../lib/api.js';
+import { buildupHandler, getBuildupData, HTTPStatusCodes } from '../../lib/api';
 import { useSocket } from '../../app/providers';
 import './AuthPage.css';
 

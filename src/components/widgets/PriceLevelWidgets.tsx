@@ -1,7 +1,14 @@
 import React from 'react';
 import './PriceLevelWidgets.css';
 
-const PriceLevelWidget = ({ price, quantity, amount, className }) => {
+type PriceLevelWidgetProps = {
+    price: React.ReactNode;
+    quantity: React.ReactNode;
+    amount?: React.ReactNode;
+    className?: string;
+};
+
+const PriceLevelWidget = ({ price, quantity, amount, className }: PriceLevelWidgetProps) => {
     return (
         <div className={`price-level-widget ${className}`}>
             <span className="price">{price}</span>

@@ -6,8 +6,8 @@ import { createLogger } from '../../utils/logger';
 const log = createLogger('PlaceOrders');
 
 export const LimitOrdersWidget = ({ selectedStock }) => {
-    const [price, setPrice] = useState('');
-    const [amount, setAmount] = useState(10);
+    const [price, setPrice] = useState<number | ''>('');
+    const [amount, setAmount] = useState<number | ''>(10);
     const [, setSubscribeVar] = useState(0);
 
     const handleBuy = () => {
@@ -17,7 +17,12 @@ export const LimitOrdersWidget = ({ selectedStock }) => {
         }
 
         limitOrderHandler(
-            { ticker: selectedStock, volume: amount, isBid: true, price: Number(price) },
+            {
+                ticker: selectedStock,
+                volume: amount === '' ? 0 : amount,
+                isBid: true,
+                price: Number(price),
+            },
             setSubscribeVar,
         );
 
@@ -35,7 +40,12 @@ export const LimitOrdersWidget = ({ selectedStock }) => {
         }
 
         limitOrderHandler(
-            { ticker: selectedStock, volume: amount, isBid: false, price: Number(price) },
+            {
+                ticker: selectedStock,
+                volume: amount === '' ? 0 : amount,
+                isBid: false,
+                price: Number(price),
+            },
             setSubscribeVar,
         );
 

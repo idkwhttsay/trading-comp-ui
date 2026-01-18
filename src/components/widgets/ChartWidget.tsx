@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import type { ApexOptions } from 'apexcharts';
 import './ChartWidget.css';
 import CandlestickTracker from '../../lib/CandlestickTracker';
 import { createLogger } from '../../utils/logger';
 
 const log = createLogger('ChartWidget');
 
-const ChartWidget = ({ selectedStock }) => {
-    const [candlestickData, setCandlestickData] = useState([]);
+type Candle = { x: number; y: [number, number, number, number] };
+
+const ChartWidget = ({ selectedStock }: { selectedStock: string }) => {
+    const [candlestickData, setCandlestickData] = useState<Candle[]>([]);
 
     useEffect(() => {
         // Function to update chart when new data is available
-        const updateChartData = (allData) => {
+        const updateChartData = (allData: any) => {
             log.debug('Candlestick data update', {
                 selectedStock,
                 tickers: allData ? Object.keys(allData) : [],
             });
             if (allData[selectedStock] && allData[selectedStock].length > 0) {
-                const formattedData = allData[selectedStock]
+                const formattedData: Candle[] = allData[selectedStock]
                     .filter((candle) => candle.x && candle.y?.length === 4) // Ensure valid entries
                     .map((candle) => ({
                         x: new Date(candle.x).getTime(), // Convert to timestamp
@@ -55,7 +58,7 @@ const ChartWidget = ({ selectedStock }) => {
             ? Math.max(...candlestickData.map((d) => d.y[1])) * 1.02
             : undefined;
 
-    const options = {
+    const options: ApexOptions = {
         chart: {
             type: 'candlestick',
             height: 350,

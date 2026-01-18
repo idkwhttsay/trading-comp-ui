@@ -2,8 +2,20 @@ import { createLogger } from '../utils/logger';
 
 const log = createLogger('OrderBook');
 
+export type OrderBookSideVolumes = Record<number, number>;
+
+export type TickerOrderBook = {
+    bidVolumes: OrderBookSideVolumes;
+    askVolumes: OrderBookSideVolumes;
+};
+
+export type OrderBooksByTicker = Record<string, TickerOrderBook>;
+
 class OrderBook {
-    constructor(rawOrderBook = {}) {
+    public orderBooks: OrderBooksByTicker;
+    private subscribers: Array<(books: OrderBooksByTicker) => void>;
+
+    constructor(rawOrderBook: unknown = {}) {
         if (typeof rawOrderBook !== 'object' || Array.isArray(rawOrderBook)) {
             throw new TypeError('Input data must be an object.');
         }
@@ -12,7 +24,7 @@ class OrderBook {
         this.subscribers = [];
 
         // Initialize order books
-        for (const [ticker, volumes] of Object.entries(rawOrderBook)) {
+        for (const [ticker, volumes] of Object.entries(rawOrderBook as Record<string, any>)) {
             this.orderBooks[ticker] = {
                 bidVolumes: this._createSortedMap(volumes.bidVolumes || {}, true),
                 askVolumes: this._createSortedMap(volumes.askVolumes || {}, false),
@@ -21,7 +33,7 @@ class OrderBook {
     }
 
     // Subscribe to changes
-    subscribe(callback) {
+    subscribe(callback: (books: OrderBooksByTicker) => void) {
         if (typeof callback === 'function') {
             this.subscribers.push(callback);
             log.debug('Subscriber added', { total: this.subscribers.length });
@@ -29,7 +41,7 @@ class OrderBook {
     }
 
     // Unsubscribe from changes
-    unsubscribe(callback) {
+    unsubscribe(callback: (books: OrderBooksByTicker) => void) {
         this.subscribers = this.subscribers.filter((sub) => sub !== callback);
     }
 
@@ -39,7 +51,7 @@ class OrderBook {
     }
 
     // Helper to create a sorted map (object) from volumes
-    _createSortedMap(volumes, reverse) {
+    _createSortedMap(volumes: any, reverse?: boolean): any {
         if (!volumes || typeof volumes !== 'object') {
             log.warn('Invalid volumes received', { volumes });
             return {};
@@ -64,6 +76,12 @@ class OrderBook {
 
             log.debug('Processing ticker', { ticker });
 
+            const toNumber = (value: unknown): number => {
+                if (typeof value === 'number') return value;
+                if (typeof value === 'string') return parseFloat(value);
+                return NaN;
+            };
+
             // **Extract bidVolumes and askVolumes**
             const bidVolumes = tickerData.bidVolumes || {};
             const askVolumes = tickerData.askVolumes || {};
@@ -81,10 +99,10 @@ class OrderBook {
                         .filter(
                             ([price, qty]) =>
                                 !isNaN(parseFloat(price)) &&
-                                !isNaN(parseFloat(qty)) &&
-                                parseFloat(qty) > 0,
+                                !isNaN(toNumber(qty)) &&
+                                toNumber(qty) > 0,
                         )
-                        .map(([price, qty]) => [parseFloat(price), parseFloat(qty)])
+                        .map(([price, qty]) => [parseFloat(price), toNumber(qty)])
                         .sort(([priceA], [priceB]) => priceB - priceA), // High to Low
                 ),
                 askVolumes: Object.fromEntries(
@@ -92,10 +110,10 @@ class OrderBook {
                         .filter(
                             ([price, qty]) =>
                                 !isNaN(parseFloat(price)) &&
-                                !isNaN(parseFloat(qty)) &&
-                                parseFloat(qty) > 0,
+                                !isNaN(toNumber(qty)) &&
+                                toNumber(qty) > 0,
                         )
-                        .map(([price, qty]) => [parseFloat(price), parseFloat(qty)])
+                        .map(([price, qty]) => [parseFloat(price), toNumber(qty)])
                         .sort(([priceA], [priceB]) => priceA - priceB), // Low to High
                 ),
             };
@@ -105,8 +123,31 @@ class OrderBook {
         this._notifySubscribers();
     }
 
-    updateVolumes(updates) {
-        updates.forEach(({ ticker, price, side, volume }) => {
+    updateVolumes(
+        updates: Array<
+            {
+                ticker: string;
+                price?: number | string;
+                side?: string;
+                volume?: number;
+            } & Record<string, unknown>
+        >,
+    ) {
+        updates.forEach((update) => {
+            const ticker = update.ticker;
+            const price = update.price;
+            const side = update.side;
+            const volume = update.volume;
+
+            if (
+                !ticker ||
+                typeof side !== 'string' ||
+                (typeof price !== 'number' && typeof price !== 'string') ||
+                typeof volume !== 'number'
+            ) {
+                return;
+            }
+
             const sideKey = side.toLowerCase() === 'bid' ? 'bidVolumes' : 'askVolumes';
             //console.log(ticker, price, side, volume);
 
@@ -116,7 +157,11 @@ class OrderBook {
             }
 
             // Convert price to a numeric key for consistency
-            const numericPrice = parseFloat(price);
+            const numericPrice = typeof price === 'number' ? price : parseFloat(price);
+
+            if (!Number.isFinite(numericPrice)) {
+                return;
+            }
 
             if (volume === 0) {
                 // Remove price level if volume is zero
@@ -139,9 +184,12 @@ class OrderBook {
                 Object.entries(this.orderBooks[ticker][sideKey])
                     .filter(
                         ([p, q]) =>
-                            !isNaN(parseFloat(p)) && !isNaN(parseFloat(q)) && parseFloat(q) > 0,
+                            !isNaN(parseFloat(p)) &&
+                            typeof q === 'number' &&
+                            Number.isFinite(q) &&
+                            q > 0,
                     )
-                    .map(([p, q]) => [parseFloat(p), parseFloat(q)])
+                    .map(([p, q]) => [parseFloat(p), q])
                     .sort(([pA], [pB]) => (sideKey === 'bidVolumes' ? pB - pA : pA - pB)),
             );
         });
@@ -149,7 +197,7 @@ class OrderBook {
         this._notifySubscribers(); // Notify React components
     }
 
-    resetFromSnapshot(rawOrderBook) {
+    resetFromSnapshot(rawOrderBook: any) {
         this.orderBooks = {};
         this._createSortedMap(rawOrderBook);
     }

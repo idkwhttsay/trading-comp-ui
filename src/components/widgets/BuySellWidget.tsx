@@ -147,7 +147,13 @@ const BuyButton = ({ selectedStock }) => {
                                             type="number"
                                             id="quantity"
                                             value={quantity}
-                                            onChange={(e) => setQuantity(e.target.value)}
+                                            onChange={(e) =>
+                                                setQuantity(
+                                                    e.target.value === ''
+                                                        ? 0
+                                                        : Number(e.target.value),
+                                                )
+                                            }
                                             className="quantity-input"
                                             placeholder="Enter quantity"
                                         />
@@ -180,7 +186,13 @@ const BuyButton = ({ selectedStock }) => {
                                                 type="number"
                                                 id="quantity"
                                                 value={limitPrice}
-                                                onChange={(e) => setLimitPrice(e.target.value)}
+                                                onChange={(e) =>
+                                                    setLimitPrice(
+                                                        e.target.value === ''
+                                                            ? 0
+                                                            : Number(e.target.value),
+                                                    )
+                                                }
                                                 className="quantity-input"
                                                 placeholder="Enter Limit Price"
                                             />
@@ -274,7 +286,13 @@ const BuyButton = ({ selectedStock }) => {
                                                           (stock) => stock.ticker === selectedStock,
                                                       ).quantity * price
                                             }
-                                            onChange={(e) => setQuantity(e.target.value)}
+                                            onChange={(e) =>
+                                                setQuantity(
+                                                    e.target.value === ''
+                                                        ? 0
+                                                        : Number(e.target.value),
+                                                )
+                                            }
                                             className="quantity-input"
                                             placeholder="Enter quantity"
                                         />
@@ -307,7 +325,13 @@ const BuyButton = ({ selectedStock }) => {
                                                 type="number"
                                                 id="quantity"
                                                 value={limitPrice}
-                                                onChange={(e) => setLimitPrice(e.target.value)}
+                                                onChange={(e) =>
+                                                    setLimitPrice(
+                                                        e.target.value === ''
+                                                            ? 0
+                                                            : Number(e.target.value),
+                                                    )
+                                                }
                                                 className="quantity-input"
                                                 placeholder="Enter Limit Price"
                                             />

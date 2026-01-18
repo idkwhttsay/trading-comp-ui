@@ -1,12 +1,21 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import orderBookInstance from '../../lib/OrderBook';
+import orderBookInstance, {
+    type OrderBooksByTicker,
+    type TickerOrderBook,
+} from '../../lib/OrderBook';
 
-const OrderBookContext = createContext(null);
+type OrderBookContextValue = {
+    orderBooks: OrderBooksByTicker;
+};
 
-export function OrderBookProvider({ children }) {
-    const [orderBooks, setOrderBooks] = useState(() => orderBookInstance.orderBooks || {});
+const OrderBookContext = createContext<OrderBookContextValue | undefined>(undefined);
 
-    const handleUpdate = useCallback((nextBooks) => {
+export function OrderBookProvider({ children }: { children: React.ReactNode }) {
+    const [orderBooks, setOrderBooks] = useState<OrderBooksByTicker>(
+        () => orderBookInstance.orderBooks || {},
+    );
+
+    const handleUpdate = useCallback((nextBooks: OrderBooksByTicker) => {
         // OrderBook mutates its internal `orderBooks` in place.
         // Ensure a new reference so React consumers always re-render.
         setOrderBooks(nextBooks ? { ...nextBooks } : {});
@@ -26,13 +35,13 @@ export function OrderBookProvider({ children }) {
     return <OrderBookContext.Provider value={value}>{children}</OrderBookContext.Provider>;
 }
 
-export function useOrderBook(ticker) {
+export function useOrderBook(ticker: string) {
     const ctx = useContext(OrderBookContext);
     if (!ctx) {
         throw new Error('useOrderBook must be used within <OrderBookProvider>');
     }
 
-    const book = ticker ? ctx.orderBooks?.[ticker] : undefined;
+    const book: TickerOrderBook | undefined = ticker ? ctx.orderBooks?.[ticker] : undefined;
     const bidVolumes = book?.bidVolumes || {};
     const askVolumes = book?.askVolumes || {};
 
