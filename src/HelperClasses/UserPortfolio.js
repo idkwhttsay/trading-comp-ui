@@ -5,14 +5,14 @@ class UserPortfolio {
             pnl: 0,
             positions: {},
             username: null,
-            Orders: []
+            Orders: [],
         };
         this.subscribers = [];
     }
 
     // Subscribe to changes
     subscribe(callback) {
-        if (typeof callback === "function") {
+        if (typeof callback === 'function') {
             this.subscribers.push(callback);
         }
     }
@@ -30,8 +30,8 @@ class UserPortfolio {
     // Update portfolio and notify subscribers
     updatePortfolio(message) {
         //console.log(message);
-        if (!message || typeof message !== "object") {
-            console.error("Invalid message format:", message);
+        if (!message || typeof message !== 'object') {
+            console.error('Invalid message format:', message);
             return;
         }
 
@@ -44,17 +44,18 @@ class UserPortfolio {
             this.data.pnl = pnl;
             //console.log(pnl);
         }
-        if (positions && typeof positions === "object") {
-            this.data.positions = {...this.data.positions, ...positions };
+        if (positions && typeof positions === 'object') {
+            this.data.positions = { ...this.data.positions, ...positions };
         }
-        if (username) { //
+        if (username) {
+            //
             this.data.username = username;
         }
-        if (Orders && typeof Orders === "object") {
+        if (Orders && typeof Orders === 'object') {
             let orderList = [];
             Object.keys(Orders).forEach((ticker) => {
                 Orders[ticker].forEach((order) => {
-                    orderList.push({...order, ticker });
+                    orderList.push({ ...order, ticker });
                 });
             });
             this.data.Orders = orderList;
@@ -67,7 +68,7 @@ class UserPortfolio {
     }
 
     getPortfolio() {
-        return {...this.data };
+        return { ...this.data };
     }
 }
 

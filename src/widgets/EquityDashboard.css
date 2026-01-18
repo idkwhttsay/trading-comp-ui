@@ -12,15 +12,14 @@ h2 {
 
 /* Container holding the stock widgets */
 .tickers-container {
-    display: flex;              
-    flex-direction: column;     /* Stack widgets vertically */                /* Small gap between widgets */
-    height: 100%;               /* Fill the container height */
+    display: flex;
+    flex-direction: column; /* Stack widgets vertically */ /* Small gap between widgets */
+    height: 100%; /* Fill the container height */
     gap: 3px;
 }
 
 /* Style for individual stock items */
 .stock-item {
-    width: 100%;                /* Full width for each stock widget */
-    height: 100px;              /* Set height of each widget */
+    width: 100%; /* Full width for each stock widget */
+    height: 100px; /* Set height of each widget */
 }
-

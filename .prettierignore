@@ -1,0 +1,14 @@
+# dependencies
+node_modules
+
+# build outputs
+build
+coverage
+
+# misc
+*.log
+.DS_Store
+
+# CRA / tooling
+*.lock
+package-lock.json

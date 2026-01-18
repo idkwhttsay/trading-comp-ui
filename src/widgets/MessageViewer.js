@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { getMessageList, ErrorCodes } from "../HelperClasses/api";
-import { controls } from "../HelperClasses/controls";
-import "./MessageViewer.css";
+import React, { useState, useEffect } from 'react';
+import { getMessageList, ErrorCodes } from '../HelperClasses/api';
+import { controls } from '../HelperClasses/controls';
+import './MessageViewer.css';
 
 const MessageViewer = () => {
     const [messages, setMessages] = useState([]);
@@ -23,11 +23,15 @@ const MessageViewer = () => {
 
     return (
         <div className="message-viewer">
-            <div className="message-widget"> 
+            <div className="message-widget">
                 {messages.map((msg, index) => (
-                    <div 
-                        key={index} 
-                        className={msg.errorCode === ErrorCodes.SUCCESS ? "message-success" : "message-error"}
+                    <div
+                        key={index}
+                        className={
+                            msg.errorCode === ErrorCodes.SUCCESS
+                                ? 'message-success'
+                                : 'message-error'
+                        }
                     >
                         {msg.errorMessage}
                     </div>
@@ -38,5 +42,3 @@ const MessageViewer = () => {
 };
 
 export default MessageViewer;
-
-

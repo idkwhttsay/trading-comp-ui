@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import "./TradeTable.css";
-import userPortfolio from "../HelperClasses/UserPortfolio";
-import { removeHandler } from "../HelperClasses/api.js";
+import React, { useEffect, useState } from 'react';
+import './TradeTable.css';
+import userPortfolio from '../HelperClasses/UserPortfolio';
+import { removeHandler } from '../HelperClasses/api.js';
 
 const TradeTable = () => {
     const [balance, setBalance] = useState(0);
@@ -36,7 +36,13 @@ const TradeTable = () => {
 
     return (
         <div className="pnl-dashboard">
-
+            <div className="tables-container">
+                <div className="table-wrapper">
+                    <h3>Account</h3>
+                    <p>Balance: {balance}</p>
+                    <p>PnL: {pnl}</p>
+                </div>
+            </div>
             {/* Flex container for tables */}
             <div className="tables-container">
                 {/* Current Positions Table */}
@@ -63,7 +69,7 @@ const TradeTable = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={2} style={{ textAlign: "center" }}>
+                                    <td colSpan={2} style={{ textAlign: 'center' }}>
                                         No positions available
                                     </td>
                                 </tr>
@@ -105,7 +111,7 @@ const TradeTable = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={6} style={{ textAlign: "center" }}>
+                                    <td colSpan={6} style={{ textAlign: 'center' }}>
                                         No open orders
                                     </td>
                                 </tr>
@@ -119,4 +125,3 @@ const TradeTable = () => {
 };
 
 export default TradeTable;
-

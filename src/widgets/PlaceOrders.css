@@ -12,25 +12,25 @@
 
 /* Buy & Sell Row - Fully Centered */
 .buy-sell-flex {
-  display: flex;
-  align-items: center; /* Align items vertically */
-  justify-content: center; /* Space evenly */
-  gap: 15px; /* Consistent spacing */
-  width: 100%;
-  flex-direction: row;
-  background-color: #1a1a1a;
-  padding : 20px;
-  border-radius: 5px;
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: center; /* Space evenly */
+    gap: 15px; /* Consistent spacing */
+    width: 100%;
+    flex-direction: row;
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 5px;
 }
 
 .OrderType {
     display: flex;
-    flex-direction: column;  /* Ensure stacking vertically */
-    align-items: center;  /* Center elements horizontally */
-    gap: 5px; 
+    flex-direction: column; /* Ensure stacking vertically */
+    align-items: center; /* Center elements horizontally */
+    gap: 5px;
     background-color: #1a1a1a;
     border-radius: 5px;
-    padding : 14px;
+    padding: 14px;
 }
 
 .pnl-heading {
@@ -39,37 +39,36 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     margin: 0;
-  }
-
+}
 
 .SelectedStockWidget {
-    padding : 20px;
+    padding: 20px;
     background-color: #1a1a1a;
     height: 100%;
     border-radius: 5px;
-    align-items: center; 
-  }
+    align-items: center;
+}
 
 .buy-sell-column-1 {
     display: flex;
     flex-direction: column;
-    gap : 10px;
-    width : 33%
+    gap: 10px;
+    width: 33%;
 }
 
 .buy-sell-column-2 {
     display: flex;
     flex-direction: column;
-    gap : 10px;
-    width : 33%;
+    gap: 10px;
+    width: 33%;
     align-items: flex-end;
 }
 
 .buy-sell-column-3 {
     display: flex;
     flex-direction: column;
-    gap : 10px;
-    width : 33%;
+    gap: 10px;
+    width: 33%;
 }
 
 .choose-title {
@@ -82,8 +81,9 @@
     margin: 0;
 }
 
-.market-button, .limit-button {
-    margin: 2px; 
+.market-button,
+.limit-button {
+    margin: 2px;
     width: 50%;
     background-color: transparent;
     color: white;
@@ -95,10 +95,14 @@
     border: none;
 }
 
-.market-button:hover, .limit-button:hover,
-.market-button:focus, .limit-button:focus, 
-.market-button.selected, .limit-button.selected,
-.market-button:active, .limit-button:active {
+.market-button:hover,
+.limit-button:hover,
+.market-button:focus,
+.limit-button:focus,
+.market-button.selected,
+.limit-button.selected,
+.market-button:active,
+.limit-button:active {
     background-color: white; /* Light grey background on hover */
     border: 2px solid white; /* White border on hover */
     color: black; /* Text remains black */
@@ -106,15 +110,14 @@
 }
 
 .market-button.selected {
-    background-color: white;  
+    background-color: white;
     color: black;
 }
 
 .limit-button.selected {
-    background-color: white;  
+    background-color: white;
     color: black;
 }
-
 
 .buy-button,
 .sell-button {
@@ -131,7 +134,7 @@
 }
 
 .quantity-input {
-    margin-top: 4px; 
+    margin-top: 4px;
     height: 20px !important; /* Same height for all elements */
     text-align: center;
     font-size: 16px; /* Consistent font size */

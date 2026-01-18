@@ -1,8 +1,11 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import PriceLevelWidget from "./PriceLevelWidgets";
-import "./OrderBookWidgets.css";
-import orderBookInstance from "../HelperClasses/OrderBook"; // Import the OrderBook singleton
-import { truncateDecimal } from "../util/math"; // Import the truncateDecimal function
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import PriceLevelWidget from './PriceLevelWidgets';
+import './OrderBookWidgets.css';
+import orderBookInstance from '../HelperClasses/OrderBook'; // Import the OrderBook singleton
+import { truncateDecimal } from '../util/math'; // Import the truncateDecimal function
+import { createLogger } from '../util/logger';
+
+const log = createLogger('OrderBookWidget');
 
 const OrderBookWidget = ({ selectedStock }) => {
     const [stockData, setStockData] = useState({ bidVolumes: {}, askVolumes: {} });
@@ -27,17 +30,17 @@ const OrderBookWidget = ({ selectedStock }) => {
                 });
                 setHasOrderBook(true);
             } else {
-                console.log(`⚠️ No data found for selectedStock: ${selectedStock}`);
+                log.debug('No order book data found for selectedStock', { selectedStock });
                 setStockData({ bidVolumes: {}, askVolumes: {} });
                 setHasOrderBook(false);
             }
         },
-        [selectedStock]
+        [selectedStock],
     );
 
     useEffect(() => {
         // Subscribe to order book updates
-        console.log(`🟢 Subscribing to updates for selectedStock: ${selectedStock}`);
+        log.debug('Subscribing to order book updates', { selectedStock });
         orderBookInstance.subscribe(updateStockData);
 
         // Initialize with current data
@@ -52,14 +55,14 @@ const OrderBookWidget = ({ selectedStock }) => {
             });
             setHasOrderBook(true);
         } else {
-            console.log(`⚠️ No initial data for selectedStock: ${selectedStock}`);
+            log.debug('No initial order book data for selectedStock', { selectedStock });
             setStockData({ bidVolumes: {}, askVolumes: {} });
             setHasOrderBook(false);
         }
 
         // Cleanup: Unsubscribe on unmount or stock change
         return () => {
-            console.log(`🔴 Unsubscribing OrderBookWidget for ${selectedStock}`);
+            log.debug('Unsubscribing from order book updates', { selectedStock });
             orderBookInstance.unsubscribe(updateStockData); // Avoid memory leaks
         };
     }, [selectedStock, updateStockData]);
@@ -85,9 +88,10 @@ const OrderBookWidget = ({ selectedStock }) => {
         .map(([price, quantity]) => ({ P: parseFloat(price), Q: quantity }))
         .sort((a, b) => a.P - b.P); // Sorted from lowest to highest
 
-    const spread = sortedAsks.length > 0 && sortedBids.length > 0
-        ? `${truncateDecimal(sortedAsks[0].P - sortedBids[0].P, 2)} (${truncateDecimal(100 * (sortedAsks[0].P - sortedBids[0].P) / ((sortedAsks[0].P + sortedBids[0].P) / 2), 2)}%)`
-        : `N/A`
+    const spread =
+        sortedAsks.length > 0 && sortedBids.length > 0
+            ? `${truncateDecimal(sortedAsks[0].P - sortedBids[0].P, 2)} (${truncateDecimal((100 * (sortedAsks[0].P - sortedBids[0].P)) / ((sortedAsks[0].P + sortedBids[0].P) / 2), 2)}%)`
+            : `N/A`;
 
     const [autoCenter, setAutoCenter] = useState(true);
 
@@ -110,41 +114,44 @@ const OrderBookWidget = ({ selectedStock }) => {
     useEffect(() => {
         const handleBidsScroll = () => {
             if (bidsRef.current && bidsRef.current.scrollTop !== 0) {
-                setAutoCenter(prev => prev ? !prev : prev);
+                setAutoCenter((prev) => (prev ? !prev : prev));
             }
         };
 
         const handleAsksScroll = () => {
-            if (asksRef.current && asksRef.current.scrollTop !== asksRef.current.scrollHeight - asksRef.current.clientHeight) {
-                setAutoCenter(prev => prev ? !prev : prev);
+            if (
+                asksRef.current &&
+                asksRef.current.scrollTop !==
+                    asksRef.current.scrollHeight - asksRef.current.clientHeight
+            ) {
+                setAutoCenter((prev) => (prev ? !prev : prev));
             }
         };
-    
+
         const bidsDivElement = bidsRef.current;
         if (bidsDivElement) {
-            bidsDivElement.addEventListener("scroll", handleBidsScroll);
+            bidsDivElement.addEventListener('scroll', handleBidsScroll);
         }
 
         const asksDivElement = asksRef.current;
         if (asksDivElement) {
-            asksDivElement.addEventListener("scroll", handleAsksScroll);
+            asksDivElement.addEventListener('scroll', handleAsksScroll);
         }
-    
+
         return () => {
             if (bidsDivElement) {
-                bidsDivElement.removeEventListener("scroll", handleBidsScroll);
+                bidsDivElement.removeEventListener('scroll', handleBidsScroll);
             }
 
             if (asksDivElement) {
-                asksDivElement.removeEventListener("scroll", handleAsksScroll);
+                asksDivElement.removeEventListener('scroll', handleAsksScroll);
             }
         };
-    }, [asksRef.current, bidsRef.current, autoCenter]);
+    }, [autoCenter]);
 
     const handleReCenter = () => {
-        setAutoCenter(prev => prev ? prev : !prev);
+        setAutoCenter((prev) => (prev ? prev : !prev));
     };
-    
 
     return (
         <div className="order-book-widget">
@@ -178,17 +185,17 @@ const OrderBookWidget = ({ selectedStock }) => {
                     {/* Spread & Re-Center in a single row */}
                     <PriceLevelWidget
                         price={`Spread: ${spread}`}
-                        quantity={""} // No quantity needed
+                        quantity={''} // No quantity needed
                         amount={
-                            <button 
+                            <button
                                 onClick={handleReCenter}
                                 style={{
-                                    backgroundColor: autoCenter ? "grey" : "black",
-                                    color: "white",
-                                    padding: "5px 10px",
-                                    border: "none",
-                                    cursor: "pointer",
-                                    borderRadius: "5px"
+                                    backgroundColor: autoCenter ? 'grey' : 'black',
+                                    color: 'white',
+                                    padding: '5px 10px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    borderRadius: '5px',
                                 }}
                             >
                                 Re-Center
@@ -220,4 +227,3 @@ const OrderBookWidget = ({ selectedStock }) => {
 };
 
 export default OrderBookWidget;
-

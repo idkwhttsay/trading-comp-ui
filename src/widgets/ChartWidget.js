@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import ReactApexChart from "react-apexcharts";
-import "./ChartWidget.css";
-import CandlestickTracker from "../HelperClasses/CandlestickTracker";
+import { useState, useEffect } from 'react';
+import ReactApexChart from 'react-apexcharts';
+import './ChartWidget.css';
+import CandlestickTracker from '../HelperClasses/CandlestickTracker';
 
 const ChartWidget = ({ selectedStock }) => {
     const [candlestickData, setCandlestickData] = useState([]);
@@ -9,14 +9,14 @@ const ChartWidget = ({ selectedStock }) => {
     useEffect(() => {
         // Function to update chart when new data is available
         const updateChartData = (allData) => {
-            console.log("📊 Full CandlestickTracker Data:", allData); // Log all data for debugging
-            console.log("Selected Stock", selectedStock)
+            console.log('📊 Full CandlestickTracker Data:', allData); // Log all data for debugging
+            console.log('Selected Stock', selectedStock);
             if (allData[selectedStock] && allData[selectedStock].length > 0) {
                 const formattedData = allData[selectedStock]
-                    .filter(candle => candle.x && candle.y?.length === 4) // Ensure valid entries
-                    .map(candle => ({
+                    .filter((candle) => candle.x && candle.y?.length === 4) // Ensure valid entries
+                    .map((candle) => ({
                         x: new Date(candle.x).getTime(), // Convert to timestamp
-                        y: [...candle.y] // Copy OHLC values
+                        y: [...candle.y], // Copy OHLC values
                     }));
 
                 console.log(`🔄 Updating Chart for ${selectedStock}:`, formattedData);
@@ -38,44 +38,50 @@ const ChartWidget = ({ selectedStock }) => {
     }, [selectedStock]);
 
     // Determine y-axis min and max dynamically
-    const minPrice = candlestickData.length > 0 ? Math.min(...candlestickData.map(d => d.y[2])) * 0.98 : undefined;
-    const maxPrice = candlestickData.length > 0 ? Math.max(...candlestickData.map(d => d.y[1])) * 1.02 : undefined;
+    const minPrice =
+        candlestickData.length > 0
+            ? Math.min(...candlestickData.map((d) => d.y[2])) * 0.98
+            : undefined;
+    const maxPrice =
+        candlestickData.length > 0
+            ? Math.max(...candlestickData.map((d) => d.y[1])) * 1.02
+            : undefined;
 
     const options = {
         chart: {
-            type: "candlestick",
-            height: 350
+            type: 'candlestick',
+            height: 350,
         },
         title: {
-            text: selectedStock || "Select a Stock",
-            align: "left",
+            text: selectedStock || 'Select a Stock',
+            align: 'left',
             style: {
-                fontWeight: "bold",
-                color: "#FFFFFF"
-            }
+                fontWeight: 'bold',
+                color: '#FFFFFF',
+            },
         },
         xaxis: {
-            type: "datetime",
+            type: 'datetime',
             labels: {
                 style: {
-                    fontWeight: "bold",
-                    colors: "#FFFFFF"
-                }
-            }
+                    fontWeight: 'bold',
+                    colors: '#FFFFFF',
+                },
+            },
         },
         yaxis: {
             min: minPrice,
             max: maxPrice,
             tooltip: {
-                enabled: true
+                enabled: true,
             },
             labels: {
                 style: {
-                    fontWeight: "bold",
-                    colors: "#FFFFFF"
-                }
-            }
-        }
+                    fontWeight: 'bold',
+                    colors: '#FFFFFF',
+                },
+            },
+        },
     };
 
     return (

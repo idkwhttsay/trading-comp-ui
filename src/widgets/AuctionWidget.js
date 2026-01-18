@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 // import DataFinder from "../HelperClasses/DataFinder";
 import './AuctionWidget.css';
-import {bidAuctionHandler} from "../HelperClasses/api";
+import { bidAuctionHandler } from '../HelperClasses/api';
 
 // const calculatePnL = () => {
 //     const pnlResults = DataFinder.getPositionData("12345").map(trade => {
@@ -32,7 +32,7 @@ import {bidAuctionHandler} from "../HelperClasses/api";
 
 const AuctionWidget = () => {
     const [inputValue, setInputValue] = useState(0);
-    const [subscribeVar, setSubscribeVar] = useState(true);
+    const [, setSubscribeVar] = useState(true);
 
     const handleInputChange = (e) => {
         const value = parseFloat(e.target.value);
@@ -42,7 +42,7 @@ const AuctionWidget = () => {
     const handleSubmit = () => {
         // alert(`Submitted value: ${inputValue}`);
         console.log(`Auctioned value: ${inputValue}`);
-        bidAuctionHandler({bid: inputValue}, setSubscribeVar);
+        bidAuctionHandler({ bid: inputValue }, setSubscribeVar);
     };
 
     return (
@@ -56,10 +56,7 @@ const AuctionWidget = () => {
                     onChange={handleInputChange}
                     className="auction-widget-input"
                 />
-                <button
-                    className="auction-widget-button"
-                    onClick={handleSubmit}
-                >
+                <button className="auction-widget-button" onClick={handleSubmit}>
                     Submit
                 </button>
             </div>

@@ -3,66 +3,66 @@
 
 /* API-Auth Styling */
 .API-Auth {
-  display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  align-items: center; /* Center elements */
-  justify-content: center; /* Center within container */
-  font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center elements */
+    justify-content: center; /* Center within container */
+    font-family: 'Roboto', sans-serif; /* Apply Roboto font */
 }
 
 /* Header Styling */
 .API-Auth h2 {
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px; /* Space below header */
-  font-family: 'Roboto', sans-serif;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px; /* Space below header */
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Input fields */
 .API-Auth input {
-  width: 160%; /* Make input fields take up more space */
-  max-width: 800px; /* Increased max width for longer inputs */
-  margin-top: 8px;
-  padding: 6px; /* Slightly more padding for a better feel */
-  margin-bottom: 6px; /* Reduce spacing between fields */
-  border: 1px solid #444; /* Dark grey border */
-  border-radius: 5px; /* Rounded corners */
-  background-color: #333; /* Dark theme */
-  color: white;
-  font-size: 16px;
-  outline: none;
-  text-align: center;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
-  font-family: 'Roboto', sans-serif;
+    width: 160%; /* Make input fields take up more space */
+    max-width: 800px; /* Increased max width for longer inputs */
+    margin-top: 8px;
+    padding: 6px; /* Slightly more padding for a better feel */
+    margin-bottom: 6px; /* Reduce spacing between fields */
+    border: 1px solid #444; /* Dark grey border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #333; /* Dark theme */
+    color: white;
+    font-size: 16px;
+    outline: none;
+    text-align: center;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Placeholder text */
 .API-Auth input::placeholder {
-  color: #aaa;
-  font-family: 'Roboto', sans-serif;
+    color: #aaa;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Submit button */
 .API-Auth button {
-  width: 40%; /* Make the button smaller */
-  max-width: 200px; /* Keep it compact */
-  padding: 1px; /* Reduce button height */
-  margin-bottom: 4px;
-  border: none;
-  border-radius: 5px;
-  background-color: #04a454;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 5px; /* Adjust button position */
-  font-family: 'Roboto', sans-serif;
+    width: 40%; /* Make the button smaller */
+    max-width: 200px; /* Keep it compact */
+    padding: 1px; /* Reduce button height */
+    margin-bottom: 4px;
+    border: none;
+    border-radius: 5px;
+    background-color: #04a454;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 5px; /* Adjust button position */
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Button hover effect */
 .API-Auth button:hover {
-  background-color: #247a52;
+    background-color: #247a52;
 }

@@ -1,9 +1,11 @@
-import orderBookInstance from "./OrderBook";
-import {controls} from "./controls";
+import orderBookInstance from './OrderBook';
+import { controls } from './controls';
+import { getApiBaseUrl } from '../config/runtime';
+import { createLogger } from '../util/logger';
 
-//const URI = "http://ec2-13-59-143-196.us-east-2.compute.amazonaws.com:8080"; // micro
-const URI = "http://localhost:8080"                                               // local
-// const URI = "http://ec2-18-220-60-154.us-east-2.compute.amazonaws.com:8080"        // deployment
+const log = createLogger('api');
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const HTTPStatusCodes = Object.freeze({
     OK: 200,
@@ -27,17 +29,10 @@ export const ErrorCodes = Object.freeze({
 let messages = [];
 
 class AsyncAPICall {
-    path;
-    dependency;
-    data;
-    promise;
-    subscriber;
-    counter;
-
     constructor(path, dependency) {
         this.path = path;
         this.data = null;
-        this.promise = new Promise((resolve, reject) => { resolve(); });
+        this.promise = Promise.resolve();
         this.subscriber = (val) => {};
         this.dependency = dependency;
         this.counter = 0;
@@ -48,61 +43,72 @@ class AsyncAPICall {
     }
 
     async requestHelper(form) {
+        const requestBody = { ...(form || {}) };
+
         if (this.dependency !== null) {
             await this.dependency.promise;
-            for (const key in this.dependency.data) {
-                form[key] = this.dependency.data[key];
+            if (this.dependency.data && typeof this.dependency.data === 'object') {
+                Object.assign(requestBody, this.dependency.data);
             }
         }
-        let promise = fetch(URI + this.path, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(form)
-            })
-            .then(async(data) => {
-                console.log(`Request to ${this.path} - Status:`, data.status); // Log response status
-                console.log(`Raw response before JSON parsing:`, data);
-                const jsonResponse = await data.json();
-                console.log(jsonResponse)
-                jsonResponse['status'] = data.status;
-                console.log(`Response from ${this.path}:`, jsonResponse); // Log full API response
-                messages.push({errorMessage: this.path + ": " + jsonResponse.message.errorMessage, errorCode: jsonResponse.message.errorCode});
-                return jsonResponse;
-            });
 
-        this.data = await promise;
-        this.data = {...this.data, ...form };
-        if (this.path === '/buildup') {
-            localStorage.setItem("username", this.data.username);
-            localStorage.setItem("apiKey", this.data.apiKey);
+        const resp = await fetch(API_BASE_URL + this.path, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody),
+        });
+
+        let jsonResponse;
+        try {
+            jsonResponse = await resp.json();
+        } catch (_) {
+            jsonResponse = { message: { errorMessage: 'Non-JSON response' } };
         }
+
+        jsonResponse.status = resp.status;
+
+        const errorMessage = jsonResponse?.message?.errorMessage;
+        const errorCode = jsonResponse?.message?.errorCode;
+        if (typeof errorMessage === 'string' || typeof errorCode === 'number') {
+            messages.push({
+                errorMessage: `${this.path}: ${errorMessage ?? ''}`.trim(),
+                errorCode,
+            });
+        }
+
+        this.data = { ...jsonResponse, ...requestBody };
+
+        if (this.path === '/buildup') {
+            if (this.data.username) localStorage.setItem('username', this.data.username);
+            if (this.data.apiKey) localStorage.setItem('apiKey', this.data.apiKey);
+        }
+
         this.counter++;
-        controls.messageCount++;
-        controls.messageSubscriber(controls.messageCount);
+        if (controls) {
+            controls.messageCount++;
+            controls.messageSubscriber(controls.messageCount);
+        }
         this.subscriber(this.counter);
     }
 
     request(form) {
         this.promise = this.requestHelper(form);
+        return this.promise;
     }
 }
 
-
-let buildupObject = new AsyncAPICall("/buildup", null);
-let teardownObject = new AsyncAPICall("/teardown", buildupObject);
-let limitOrderObject = new AsyncAPICall("/limit_order", buildupObject);
-let marketOrderObject = new AsyncAPICall("/market_order", buildupObject);
-let bidAuctionObject = new AsyncAPICall("/bid_auction", buildupObject);
-let removeObject = new AsyncAPICall("/remove", buildupObject);
+let buildupObject = new AsyncAPICall('/buildup', null);
+let teardownObject = new AsyncAPICall('/teardown', buildupObject);
+let limitOrderObject = new AsyncAPICall('/limit_order', buildupObject);
+let marketOrderObject = new AsyncAPICall('/market_order', buildupObject);
+let bidAuctionObject = new AsyncAPICall('/bid_auction', buildupObject);
+let removeObject = new AsyncAPICall('/remove', buildupObject);
 let tickers = [];
 const setTickers = (newTickers) => {
     if (Array.isArray(newTickers)) {
         // ✅ Ensure only valid strings get added
-        const filteredTickers = newTickers.filter(ticker => typeof ticker === "string");
+        const filteredTickers = newTickers.filter((ticker) => typeof ticker === 'string');
         tickers.splice(0, tickers.length, ...filteredTickers);
-        console.log("Tickers updated:", tickers);
     }
 };
 export function buildupHandler(data, subscriber) {
@@ -113,16 +119,17 @@ export function buildupHandler(data, subscriber) {
         // After the build-up is successful (counter > 0), connect to WebSocket
         if (counter > 0) {
             const buildupData = getBuildupData();
-            console.log(buildupData)
-            console.log(buildupObject)
-            console.log(data)
-            if (buildupData && buildupData.username && buildupData.sessionToken && buildupData.orderBookData) {
-                console.log("Build-up complete. Initiating WebSocket connection...");
+            if (
+                buildupData &&
+                buildupData.username &&
+                buildupData.sessionToken &&
+                buildupData.orderBookData
+            ) {
                 buildupData.orderBookData = JSON.parse(buildupData.orderBookData);
                 setTickers(Object.keys(buildupData.orderBookData));
-                orderBookInstance._createSortedMap(buildupData.orderBookData)
+                orderBookInstance._createSortedMap(buildupData.orderBookData);
             } else {
-                console.error("Buildup data is incomplete. Cannot connect to WebSocket.");
+                log.error('Buildup data is incomplete; cannot initialize order book/tickers');
             }
         }
     });
@@ -150,7 +157,6 @@ export function bidAuctionHandler(data, subscriber) {
     bidAuctionObject.request(data);
 }
 export function removeHandler(data) {
-    console.log(data);
     removeObject.request(data);
 }
 
@@ -169,9 +175,7 @@ export function getLimitOrderData() {
 export function getMarketOrderData() {
     return marketOrderObject.data;
 }
-export function getBidAuctionData() {
-
-}
+export function getBidAuctionData() {}
 export function getTickers() {
     return Array.isArray(tickers) && tickers.length > 0 ? [...tickers] : [];
 }
@@ -186,29 +190,38 @@ async function requestWithAuth(method, pathWithQuery) {
     if (!buildupData || !buildupData.sessionToken || !buildupData.username) {
         return {
             status: HTTPStatusCodes.UNAUTHORIZED,
-            message: { errorMessage: "Missing session credentials", errorCode: ErrorCodes.AUTHENTICATION_FAILED },
+            message: {
+                errorMessage: 'Missing session credentials',
+                errorCode: ErrorCodes.AUTHENTICATION_FAILED,
+            },
         };
     }
 
-    const url = new URL(URI + pathWithQuery);
+    const url = new URL(API_BASE_URL + pathWithQuery);
     // Backends commonly auth these endpoints the same way as the websocket.
-    url.searchParams.set("Session-ID", buildupData.sessionToken);
-    url.searchParams.set("Username", buildupData.username);
+    url.searchParams.set('Session-ID', buildupData.sessionToken);
+    url.searchParams.set('Username', buildupData.username);
 
     const resp = await fetch(url.toString(), {
         method,
         headers: {
-            "Accept": "application/json",
-            ...(method !== "GET" ? { "Content-Type": "application/json" } : {}),
+            Accept: 'application/json',
+            ...(method !== 'GET' ? { 'Content-Type': 'application/json' } : {}),
         },
-        body: method !== "GET" ? JSON.stringify({ username: buildupData.username, sessionToken: buildupData.sessionToken }) : undefined,
+        body:
+            method !== 'GET'
+                ? JSON.stringify({
+                      username: buildupData.username,
+                      sessionToken: buildupData.sessionToken,
+                  })
+                : undefined,
     });
 
     let json;
     try {
         json = await resp.json();
     } catch (_) {
-        json = { message: { errorMessage: "Non-JSON response" } };
+        json = { message: { errorMessage: 'Non-JSON response' } };
     }
     json.status = resp.status;
     return json;
@@ -216,10 +229,10 @@ async function requestWithAuth(method, pathWithQuery) {
 
 export async function fetchSnapshot() {
     // Prefer GET (as per docs), but fall back to POST if server is implemented that way.
-    const getResp = await requestWithAuth("GET", "/snapshot");
+    const getResp = await requestWithAuth('GET', '/snapshot');
     if (getResp.status === HTTPStatusCodes.OK) return getResp;
     if (getResp.status === 404 || getResp.status === 405) {
-        return await requestWithAuth("POST", "/snapshot");
+        return await requestWithAuth('POST', '/snapshot');
     }
     return getResp;
 }
@@ -229,8 +242,8 @@ export async function fetchUpdateBySeq(seq) {
     if (!Number.isFinite(safeSeq) || safeSeq < 0) {
         return {
             status: HTTPStatusCodes.BAD_REQUEST,
-            message: { errorMessage: "Invalid seq", errorCode: ErrorCodes.BAD_INPUT },
+            message: { errorMessage: 'Invalid seq', errorCode: ErrorCodes.BAD_INPUT },
         };
     }
-    return await requestWithAuth("GET", `/updates?seq=${encodeURIComponent(String(safeSeq))}`);
+    return await requestWithAuth('GET', `/updates?seq=${encodeURIComponent(String(safeSeq))}`);
 }

@@ -1,4 +1,7 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('ErrorBoundary');
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -11,23 +14,25 @@ class ErrorBoundary extends Component {
     }
 
     componentDidCatch(error, errorInfo) {
-        console.error("❌ Error caught by ErrorBoundary:", error);
-        console.error("🔍 Error details:", errorInfo);
+        log.error('Unhandled error caught by ErrorBoundary', error, {
+            componentStack: errorInfo?.componentStack,
+        });
         this.setState({ errorInfo });
     }
 
     render() {
         if (this.state.hasError) {
-            return ( <
-                div style = {
-                    { padding: "20px", background: "#ffdddd", color: "#900" } } >
-                <
-                h2 > Something went wrong. < /h2> <
-                p > { this.state.error ? this.state.error.toString() : "Unknown error" } < /p> <
-                details style = {
-                    { whiteSpace: "pre-wrap" } } > { this.state.errorInfo ? this.state.errorInfo.componentStack : "No additional error details." } <
-                /details> <
-                /div>
+            return (
+                <div style={{ padding: '20px', background: '#ffdddd', color: '#900' }}>
+                    <h2> Something went wrong. </h2>{' '}
+                    <p> {this.state.error ? this.state.error.toString() : 'Unknown error'} </p>{' '}
+                    <details style={{ whiteSpace: 'pre-wrap' }}>
+                        {' '}
+                        {this.state.errorInfo
+                            ? this.state.errorInfo.componentStack
+                            : 'No additional error details.'}{' '}
+                    </details>{' '}
+                </div>
             );
         }
         return this.props.children;
