@@ -45,7 +45,7 @@ export const OrderBookSnapshotSchema = z.record(
 
 export const PortfolioOrderSchema = z
     .object({
-        orderId: z.union([z.string(), z.number()]).optional(),
+        orderId: z.string().or(z.number()).optional(),
         side: z.string().optional(),
         price: FiniteNumberSchema.optional(),
         volume: FiniteNumberSchema.optional(),
