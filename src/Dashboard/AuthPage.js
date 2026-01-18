@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buildupHandler, getBuildupData, HTTPStatusCodes } from '../HelperClasses/api.js';
-import socketManager from '../HelperClasses/SocketManager';
+import { useSocket } from '../providers';
 import './AuthPage.css';
 
 const AuthPage = () => {
@@ -12,6 +12,7 @@ const AuthPage = () => {
     const [error, setError] = useState(null);
     const didAutoBuildupRef = useRef(false);
     const navigate = useNavigate();
+    const socket = useSocket();
 
     useEffect(() => {
         if (didAutoBuildupRef.current) return;
@@ -30,14 +31,14 @@ const AuthPage = () => {
 
             if (data && data.status === HTTPStatusCodes.OK) {
                 setAuth(true);
-                socketManager.connect();
+                socket.connect();
                 navigate('/dashboard');
             } else {
                 setAuth(false);
                 setError('Authentication failed. Please try again.');
             }
         }
-    }, [subscribeVar, navigate]);
+    }, [subscribeVar, navigate, socket]);
 
     const handleApiKeyChange = (e) => {
         setApiKey(e.target.value);
