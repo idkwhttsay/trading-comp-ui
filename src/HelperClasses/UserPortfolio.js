@@ -1,3 +1,9 @@
+import { createLogger } from '../util/logger';
+import { safeParse } from '../util/validation';
+import { PortfolioMessageSchema } from '../domain/schemas';
+
+const log = createLogger('UserPortfolio');
+
 class UserPortfolio {
     constructor() {
         this.data = {
@@ -29,13 +35,15 @@ class UserPortfolio {
 
     // Update portfolio and notify subscribers
     updatePortfolio(message) {
-        //console.log(message);
-        if (!message || typeof message !== 'object') {
-            console.error('Invalid message format:', message);
+        const validated = safeParse(PortfolioMessageSchema, message, {
+            source: 'portfolio-update',
+        });
+        if (!validated) {
+            log.warn('Dropping invalid portfolio message');
             return;
         }
 
-        const { Orders, balance, pnl, positions, username } = message;
+        const { Orders, balance, pnl, positions, username } = validated;
 
         if (balance !== undefined) {
             this.data.balance = balance;

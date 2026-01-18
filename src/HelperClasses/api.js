@@ -2,6 +2,8 @@ import orderBookInstance from './OrderBook';
 import { controls } from './controls';
 import { getApiBaseUrl } from '../config/runtime';
 import { createLogger } from '../util/logger';
+import { safeJsonParse, safeParse } from '../util/validation';
+import { OrderBookSnapshotSchema } from '../domain/schemas';
 
 const log = createLogger('api');
 
@@ -74,6 +76,8 @@ class AsyncAPICall {
                 errorMessage: `${this.path}: ${errorMessage ?? ''}`.trim(),
                 errorCode,
             });
+            // Prevent accidental mutation by consumers.
+            Object.freeze(messages[messages.length - 1]);
         }
 
         this.data = { ...jsonResponse, ...requestBody };
@@ -125,9 +129,23 @@ export function buildupHandler(data, subscriber) {
                 buildupData.sessionToken &&
                 buildupData.orderBookData
             ) {
-                buildupData.orderBookData = JSON.parse(buildupData.orderBookData);
-                setTickers(Object.keys(buildupData.orderBookData));
-                orderBookInstance._createSortedMap(buildupData.orderBookData);
+                const parsedBook =
+                    typeof buildupData.orderBookData === 'string'
+                        ? safeJsonParse(buildupData.orderBookData)
+                        : buildupData.orderBookData;
+
+                const validatedBook = safeParse(OrderBookSnapshotSchema, parsedBook, {
+                    source: 'buildup',
+                });
+
+                if (!validatedBook) {
+                    log.error('Buildup orderBookData is invalid; cannot initialize order book');
+                    return;
+                }
+
+                buildupData.orderBookData = validatedBook;
+                setTickers(Object.keys(validatedBook));
+                orderBookInstance._createSortedMap(validatedBook);
             } else {
                 log.error('Buildup data is incomplete; cannot initialize order book/tickers');
             }
@@ -180,7 +198,7 @@ export function getTickers() {
     return Array.isArray(tickers) && tickers.length > 0 ? [...tickers] : [];
 }
 export function getMessageList() {
-    return messages;
+    return [...messages];
 }
 
 // --- Update-recovery endpoints (seq) ---

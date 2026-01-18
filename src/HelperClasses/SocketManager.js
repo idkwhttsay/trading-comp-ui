@@ -6,6 +6,13 @@ import CandlestickTracker from './CandlestickTracker';
 import { SeqBuffer } from './SeqBuffer';
 import { getWsBaseUrl } from '../config/runtime';
 import { createLogger } from '../util/logger';
+import { safeJsonParse, safeParse } from '../util/validation';
+import {
+    ChartUpdateSchema,
+    OrderBookSnapshotSchema,
+    OrderBookUpdatesSchema,
+    PortfolioMessageSchema,
+} from '../domain/schemas';
 
 const log = createLogger('SocketManager');
 
@@ -14,14 +21,6 @@ const TOPICS = Object.freeze({
     PRIVATE: '/user/queue/private',
     CHART: '/topic/chart',
 });
-
-function safeJsonParse(text) {
-    try {
-        return JSON.parse(text);
-    } catch (_) {
-        return null;
-    }
-}
 
 function buildBrokerUrl({ sessionToken, username }) {
     const base = getWsBaseUrl();
@@ -127,17 +126,29 @@ class SocketManager {
         // Subscribe to public orderbook updates
         this.stompClient.subscribe(TOPICS.ORDERBOOK, (message) => {
             const parsed = safeJsonParse(message.body);
-            if (parsed) this.handleOrderbookMessage(parsed);
+            if (!parsed) {
+                log.warn('Invalid JSON on orderbook topic');
+                return;
+            }
+            this.handleOrderbookMessage(parsed);
         });
 
         // Subscribe to private user-specific updates
         this.stompClient.subscribe(TOPICS.PRIVATE, (message) => {
             const parsed = safeJsonParse(message.body);
-            if (parsed) this.handlePrivateMessage(parsed);
+            if (!parsed) {
+                log.warn('Invalid JSON on private topic');
+                return;
+            }
+            this.handlePrivateMessage(parsed);
         });
         this.stompClient.subscribe(TOPICS.CHART, (message) => {
             const parsed = safeJsonParse(message.body);
-            if (parsed) this.handleChartUpdate(parsed);
+            if (!parsed) {
+                log.warn('Invalid JSON on chart topic');
+                return;
+            }
+            this.handleChartUpdate(parsed);
         });
     }
 
@@ -160,9 +171,18 @@ class SocketManager {
             return;
         }
 
+        const validatedUpdates = safeParse(OrderBookUpdatesSchema, updates, {
+            source: 'ws',
+            topic: 'orderbook',
+            seq: incomingSeq,
+        });
+        if (!validatedUpdates) {
+            return;
+        }
+
         // If server isn't sending seq yet, fall back to best-effort.
         if (incomingSeq === null) {
-            orderBookInstance.updateVolumes(updates);
+            orderBookInstance.updateVolumes(validatedUpdates);
             return;
         }
 
@@ -178,11 +198,11 @@ class SocketManager {
 
         // During a gap-fill, buffer incoming updates by seq.
         if (this.gapFillInProgress) {
-            this.pendingBySeq.set(incomingSeq, updates);
+            this.pendingBySeq.set(incomingSeq, validatedUpdates);
             return;
         }
 
-        await this.applyWithGapFill(incomingSeq, updates);
+        await this.applyWithGapFill(incomingSeq, validatedUpdates);
         await this.drainPendingInOrder();
     }
 
@@ -258,12 +278,21 @@ class SocketManager {
         const updates =
             this.extractUpdates(resp) ||
             this.extractUpdates(resp.update ? { content: resp.update } : null);
-        if (!updates) {
+
+        const validatedUpdates = updates
+            ? safeParse(OrderBookUpdatesSchema, updates, {
+                  source: 'rest',
+                  endpoint: 'updates',
+                  seq,
+              })
+            : null;
+
+        if (!validatedUpdates) {
             return false;
         }
 
         if (!this.seqBuffer.has(seq)) {
-            orderBookInstance.updateVolumes(updates);
+            orderBookInstance.updateVolumes(validatedUpdates);
             this.markApplied(seq);
         }
         return true;
@@ -295,7 +324,16 @@ class SocketManager {
                 return;
             }
 
-            orderBookInstance.resetFromSnapshot(parsedBook);
+            const validatedBook = safeParse(OrderBookSnapshotSchema, parsedBook, {
+                source: 'rest',
+                endpoint: 'snapshot',
+                reason,
+            });
+            if (!validatedBook) {
+                return;
+            }
+
+            orderBookInstance.resetFromSnapshot(validatedBook);
             this.lastAppliedSeq = latestSeq;
             this.seqBuffer.clear();
             this.pendingBySeq.clear();
@@ -316,47 +354,29 @@ class SocketManager {
 
     // Handle incoming private messages
     handlePrivateMessage(data) {
-        try {
-            // Ensure the message contains valid JSON content
-            if (!data) {
-                log.warn('Received empty/invalid private message', { data });
-                return;
-            }
+        const validated = safeParse(PortfolioMessageSchema, data, {
+            source: 'ws',
+            topic: 'private',
+        });
+        if (!validated) return;
 
-            // Parse the message content (assuming it's a JSON string)
-            //console.log("📊 Parsed Private Message Content:", data);
-
-            // Update the user's portfolio using the parsed message
-            userPortfolio.updatePortfolio(data);
-
-            //console.log("✅ User portfolio updated successfully.");
-        } catch (error) {
-            log.error('Error processing private message', error);
-        }
+        userPortfolio.updatePortfolio(validated);
     }
     handleChartUpdate(data) {
-        if (!data || typeof data !== 'object') {
-            log.warn('Received invalid chart update', { data });
-            return;
-        }
+        const validated = safeParse(ChartUpdateSchema, data, {
+            source: 'ws',
+            topic: 'chart',
+        });
+        if (!validated) return;
 
-        Object.entries(data).forEach(([ticker, ohlc]) => {
-            if (
-                typeof ohlc.open === 'number' &&
-                typeof ohlc.high === 'number' &&
-                typeof ohlc.low === 'number' &&
-                typeof ohlc.close === 'number'
-            ) {
-                CandlestickTracker.insertCandle(ticker, {
-                    open: ohlc.open,
-                    high: ohlc.high,
-                    low: ohlc.low,
-                    close: ohlc.close,
-                    timestamp: Date.now(), // Use the current timestamp
-                });
-            } else {
-                log.warn('Invalid OHLC data', { ticker, ohlc });
-            }
+        Object.entries(validated).forEach(([ticker, ohlc]) => {
+            CandlestickTracker.insertCandle(ticker, {
+                open: ohlc.open,
+                high: ohlc.high,
+                low: ohlc.low,
+                close: ohlc.close,
+                timestamp: Date.now(),
+            });
         });
     }
 

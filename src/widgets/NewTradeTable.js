@@ -4,23 +4,18 @@ import userPortfolio from '../HelperClasses/UserPortfolio';
 import { removeHandler } from '../HelperClasses/api.js';
 
 const TradeTable = () => {
-    const [balance, setBalance] = useState(0);
     const [positions, setPositions] = useState({});
     const [openOrders, setOpenOrders] = useState([]);
-    const [pnl, setPnl] = useState(0);
 
     useEffect(() => {
         const handlePortfolioUpdate = (portfolioData) => {
-            setBalance(portfolioData.balance || 0);
             setPositions(portfolioData.positions || {});
             setOpenOrders(portfolioData.Orders || []);
-            setPnl(portfolioData.pnl || 0);
         };
 
         userPortfolio.subscribe(handlePortfolioUpdate);
 
         const currentPortfolio = userPortfolio.getPortfolio();
-        setBalance(currentPortfolio.balance || 0);
         setPositions(currentPortfolio.positions || {});
         setOpenOrders(currentPortfolio.Orders || []);
 
@@ -36,13 +31,6 @@ const TradeTable = () => {
 
     return (
         <div className="pnl-dashboard">
-            <div className="tables-container">
-                <div className="table-wrapper">
-                    <h3>Account</h3>
-                    <p>Balance: {balance}</p>
-                    <p>PnL: {pnl}</p>
-                </div>
-            </div>
             {/* Flex container for tables */}
             <div className="tables-container">
                 {/* Current Positions Table */}
