@@ -3,6 +3,9 @@ import PriceLevelWidget from './PriceLevelWidgets';
 import './OrderBookWidgets.css';
 import orderBookInstance from '../HelperClasses/OrderBook'; // Import the OrderBook singleton
 import { truncateDecimal } from '../util/math'; // Import the truncateDecimal function
+import { createLogger } from '../util/logger';
+
+const log = createLogger('OrderBookWidget');
 
 const OrderBookWidget = ({ selectedStock }) => {
   const [stockData, setStockData] = useState({ bidVolumes: {}, askVolumes: {} });
@@ -27,7 +30,7 @@ const OrderBookWidget = ({ selectedStock }) => {
         });
         setHasOrderBook(true);
       } else {
-        console.log(`⚠️ No data found for selectedStock: ${selectedStock}`);
+        log.debug('No order book data found for selectedStock', { selectedStock });
         setStockData({ bidVolumes: {}, askVolumes: {} });
         setHasOrderBook(false);
       }
@@ -37,7 +40,7 @@ const OrderBookWidget = ({ selectedStock }) => {
 
   useEffect(() => {
     // Subscribe to order book updates
-    console.log(`🟢 Subscribing to updates for selectedStock: ${selectedStock}`);
+    log.debug('Subscribing to order book updates', { selectedStock });
     orderBookInstance.subscribe(updateStockData);
 
     // Initialize with current data
@@ -52,14 +55,14 @@ const OrderBookWidget = ({ selectedStock }) => {
       });
       setHasOrderBook(true);
     } else {
-      console.log(`⚠️ No initial data for selectedStock: ${selectedStock}`);
+      log.debug('No initial order book data for selectedStock', { selectedStock });
       setStockData({ bidVolumes: {}, askVolumes: {} });
       setHasOrderBook(false);
     }
 
     // Cleanup: Unsubscribe on unmount or stock change
     return () => {
-      console.log(`🔴 Unsubscribing OrderBookWidget for ${selectedStock}`);
+      log.debug('Unsubscribing from order book updates', { selectedStock });
       orderBookInstance.unsubscribe(updateStockData); // Avoid memory leaks
     };
   }, [selectedStock, updateStockData]);

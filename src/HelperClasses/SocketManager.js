@@ -5,6 +5,9 @@ import userPortfolio from './UserPortfolio';
 import CandlestickTracker from './CandlestickTracker';
 import { SeqBuffer } from './SeqBuffer';
 import { getWsBaseUrl } from '../config/runtime';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('SocketManager');
 
 const TOPICS = Object.freeze({
   ORDERBOOK: '/topic/orderbook',
@@ -51,7 +54,7 @@ class SocketManager {
     const buildupData = getBuildupData();
 
     if (!buildupData || !buildupData.sessionToken || !buildupData.username) {
-      console.error('Buildup data is incomplete or unavailable!');
+      log.error('Buildup data is incomplete or unavailable; cannot connect');
       return;
     }
 
@@ -95,7 +98,7 @@ class SocketManager {
     };
 
     this.stompClient.onWebSocketError = (error) => {
-      console.error('WebSocket Error:', error);
+      log.error('WebSocket error', error);
     };
 
     this.stompClient.onWebSocketClose = () => {
@@ -104,8 +107,10 @@ class SocketManager {
     };
 
     this.stompClient.onStompError = (frame) => {
-      console.error('STOMP Error:', frame.headers['message']);
-      console.error('Additional details:', frame.body);
+      log.error('STOMP error', {
+        message: frame?.headers?.message,
+        body: frame?.body,
+      });
     };
 
     // Activate the WebSocket connection
@@ -115,7 +120,7 @@ class SocketManager {
   // Subscribe to specific topics
   subscribeToTopics() {
     if (!this.stompClient || !this.connected) {
-      console.error('Cannot subscribe: WebSocket client is not connected.');
+      log.error('Cannot subscribe: WebSocket client is not connected');
       return;
     }
 
@@ -268,7 +273,7 @@ class SocketManager {
     try {
       const snap = await fetchSnapshot();
       if (!snap || snap.status !== HTTPStatusCodes.OK) {
-        console.warn('⚠ Snapshot request failed:', reason, snap);
+        log.warn('Snapshot request failed', { reason, snap });
         return;
       }
 
@@ -277,14 +282,14 @@ class SocketManager {
       const latestSeq = Number(snap.latestSeq ?? snap.seq ?? snap.sequence ?? snap.sequenceNumber);
 
       if (!book || !Number.isFinite(latestSeq)) {
-        console.warn('⚠ Snapshot missing fields:', snap);
+        log.warn('Snapshot missing fields', { snap });
         return;
       }
 
       // If orderBookData is a JSON string, parse it.
       const parsedBook = typeof book === 'string' ? safeJsonParse(book) : book;
       if (!parsedBook) {
-        console.warn('⚠ Snapshot book is invalid JSON:', snap);
+        log.warn('Snapshot book is invalid JSON', { snap });
         return;
       }
 
@@ -293,7 +298,7 @@ class SocketManager {
       this.seqBuffer.clear();
       this.pendingBySeq.clear();
     } catch (e) {
-      console.warn('⚠ Resnapshot failed:', reason, e);
+      log.warn('Resnapshot failed', { reason, error: e });
     }
   }
 
@@ -312,7 +317,7 @@ class SocketManager {
     try {
       // Ensure the message contains valid JSON content
       if (!data) {
-        console.warn('Received an empty or invalid private message:', data);
+        log.warn('Received empty/invalid private message', { data });
         return;
       }
 
@@ -324,12 +329,12 @@ class SocketManager {
 
       //console.log("✅ User portfolio updated successfully.");
     } catch (error) {
-      console.error('❌ Error processing private message:', error);
+      log.error('Error processing private message', error);
     }
   }
   handleChartUpdate(data) {
     if (!data || typeof data !== 'object') {
-      console.warn('⚠ Received invalid chart update:', data);
+      log.warn('Received invalid chart update', { data });
       return;
     }
 
@@ -348,7 +353,7 @@ class SocketManager {
           timestamp: Date.now(), // Use the current timestamp
         });
       } else {
-        console.warn(`⚠ Invalid OHLC data for ${ticker}:`, ohlc);
+        log.warn('Invalid OHLC data', { ticker, ohlc });
       }
     });
   }
@@ -358,7 +363,7 @@ class SocketManager {
   // Publish messages to a specific destination
   sendMessage(destination, body) {
     if (!this.isReady()) {
-      console.error('Cannot send message: WebSocket client is not connected.');
+      log.error('Cannot send message: WebSocket client is not connected');
       return;
     }
 

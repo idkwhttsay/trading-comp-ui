@@ -1,3 +1,7 @@
+import { createLogger } from '../util/logger';
+
+const log = createLogger('OrderBook');
+
 class OrderBook {
   constructor(rawOrderBook = {}) {
     if (typeof rawOrderBook !== 'object' || Array.isArray(rawOrderBook)) {
@@ -20,7 +24,7 @@ class OrderBook {
   subscribe(callback) {
     if (typeof callback === 'function') {
       this.subscribers.push(callback);
-      console.log('✅ Subscribed a new callback. Total subscribers:', this.subscribers.length);
+      log.debug('Subscriber added', { total: this.subscribers.length });
     }
   }
 
@@ -37,15 +41,15 @@ class OrderBook {
   // Helper to create a sorted map (object) from volumes
   _createSortedMap(volumes, reverse) {
     if (!volumes || typeof volumes !== 'object') {
-      console.warn('⚠️ Invalid volumes received:', volumes);
+      log.warn('Invalid volumes received', { volumes });
       return {};
     }
 
-    console.log('🔄 Building Up Order Book for All Tickers...');
+    log.debug('Building order book');
 
     // **Log all tickers (top-level keys in volumes)**
     const tickers = Object.keys(volumes);
-    console.log('📌 Tickers in Order Book:', tickers);
+    log.debug('Tickers in order book', { tickers });
 
     // **Store processed order books**
 
@@ -54,18 +58,21 @@ class OrderBook {
       const tickerData = volumes[ticker];
 
       if (!tickerData || typeof tickerData !== 'object') {
-        console.warn(`⚠️ Skipping invalid ticker: ${ticker}`);
+        log.warn('Skipping invalid ticker data', { ticker });
         continue;
       }
 
-      console.log(`📊 Processing Ticker: ${ticker}`);
+      log.debug('Processing ticker', { ticker });
 
       // **Extract bidVolumes and askVolumes**
       const bidVolumes = tickerData.bidVolumes || {};
       const askVolumes = tickerData.askVolumes || {};
 
-      console.log(`📉 Ask Volume Keys for ${ticker}:`, Object.keys(askVolumes));
-      console.log(`📈 Bid Volume Keys for ${ticker}:`, Object.keys(bidVolumes));
+      log.debug('Volume keys', {
+        ticker,
+        askKeys: Object.keys(askVolumes),
+        bidKeys: Object.keys(bidVolumes),
+      });
 
       // **Sort bidVolumes (high-to-low) and askVolumes (low-to-high)**
       this.orderBooks[ticker] = {
@@ -89,7 +96,7 @@ class OrderBook {
         ),
       };
 
-      console.log(`✅ Built Order Book for ${ticker}:`, this.orderBooks[ticker]);
+      log.debug('Built order book for ticker', { ticker });
     }
     this._notifySubscribers();
   }
@@ -109,7 +116,11 @@ class OrderBook {
 
       if (volume === 0) {
         // Remove price level if volume is zero
-        console.log('Delete Occurring');
+        log.debug('Deleting price level (volume=0)', {
+          ticker,
+          side: sideKey,
+          price: numericPrice,
+        });
         delete this.orderBooks[ticker][sideKey][numericPrice];
       } else {
         // Merge the update into the existing order book

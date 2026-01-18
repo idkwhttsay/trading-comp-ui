@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('ErrorBoundary');
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -11,8 +14,9 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('❌ Error caught by ErrorBoundary:', error);
-    console.error('🔍 Error details:', errorInfo);
+    log.error('Unhandled error caught by ErrorBoundary', error, {
+      componentStack: errorInfo?.componentStack,
+    });
     this.setState({ errorInfo });
   }
 

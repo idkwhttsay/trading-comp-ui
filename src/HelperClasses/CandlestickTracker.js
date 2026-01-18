@@ -1,3 +1,7 @@
+import { createLogger } from '../util/logger';
+
+const log = createLogger('CandlestickTracker');
+
 class CandlestickTracker {
   constructor() {
     this.tickerCandlesticks = new Map(); // Stores candlestick data per ticker
@@ -19,7 +23,7 @@ class CandlestickTracker {
       y: [ohlc.open, ohlc.high, ohlc.low, ohlc.close], // Store OHLC values
     });
 
-    console.log(`🕯️ Inserted Candlestick for ${ticker}:`, ohlc);
+    log.debug('Inserted candlestick', { ticker, ohlc });
 
     // Notify subscribers after inserting new candlestick
     this.notifySubscribers();

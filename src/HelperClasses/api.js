@@ -1,6 +1,9 @@
 import orderBookInstance from './OrderBook';
 import { controls } from './controls';
 import { getApiBaseUrl } from '../config/runtime';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('api');
 
 const API_BASE_URL = getApiBaseUrl();
 
@@ -126,7 +129,7 @@ export function buildupHandler(data, subscriber) {
         setTickers(Object.keys(buildupData.orderBookData));
         orderBookInstance._createSortedMap(buildupData.orderBookData);
       } else {
-        console.error('Buildup data is incomplete. Cannot connect to WebSocket.');
+        log.error('Buildup data is incomplete; cannot initialize order book/tickers');
       }
     }
   });
