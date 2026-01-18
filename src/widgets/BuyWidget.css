@@ -1,161 +1,160 @@
 .container {
-    text-align: center;
-  }
-  
-  .stock-info {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-  }
-  
-  .button-container {
-    padding: 10px;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  .button {
-    border: none;
-    border-radius: 12px; /* Rounded corners */
-    padding: 10px 25px; /* Size of the button */
-    font-size: 1rem; /* Text size */
-    color: white; /* Text color */
-    cursor: pointer;
-    font-weight: bold;
-  }
+  text-align: center;
+}
 
-  .complete-order {
-    background-color: #68f068; /* Light green */
-    width: 100%;
-  }
-  
-  .buy {
-    background-color: #49d849; /* Light green */
-  }
-  
-  .sell {
-    background-color: #ff3e1c; /* Light red */
-  }
-  
-  .button:hover {
-    opacity: 0.9; /* Slight hover effect */
-  }
-  
-  .button:active {
-    transform: scale(0.95); /* Shrink on click */
-  }
+.stock-info {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
 
-  .modal {
-    position: absolute;
-    transform: translateX(-50%); /* Center the modal horizontally */
-    z-index: 1000;
-  }
-  
-  .modal-box {
-    position: relative;
-    background-color: rgb(0, 0, 0);
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    min-width: 200px;
-    width: 215px;
-    height: 335px;
-  }
-  
-  /* Triangle pointing to the button */
-  .triangle {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid rgb(0, 0, 0);
-  }
-  .modal-content {
-    text-align: left;
-    margin-top: 0px;
-  }
-  p {
-    margin: 0px;
-  }
+.button-container {
+  padding: 10px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
 
-  .price-span {
-    font-weight: normal;
-  }
+.button {
+  border: none;
+  border-radius: 12px; /* Rounded corners */
+  padding: 10px 25px; /* Size of the button */
+  font-size: 1rem; /* Text size */
+  color: white; /* Text color */
+  cursor: pointer;
+  font-weight: bold;
+}
 
-  .price-change-positive {
-    color: #2e8b57;
-  }
+.complete-order {
+  background-color: #68f068; /* Light green */
+  width: 100%;
+}
 
-  .price-change-negative {
-    color: #b22222;
-  }
+.buy {
+  background-color: #49d849; /* Light green */
+}
 
-  /* Order Type Buttons */
+.sell {
+  background-color: #ff3e1c; /* Light red */
+}
+
+.button:hover {
+  opacity: 0.9; /* Slight hover effect */
+}
+
+.button:active {
+  transform: scale(0.95); /* Shrink on click */
+}
+
+.modal {
+  position: absolute;
+  transform: translateX(-50%); /* Center the modal horizontally */
+  z-index: 1000;
+}
+
+.modal-box {
+  position: relative;
+  background-color: rgb(0, 0, 0);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  min-width: 200px;
+  width: 215px;
+  height: 335px;
+}
+
+/* Triangle pointing to the button */
+.triangle {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid rgb(0, 0, 0);
+}
+.modal-content {
+  text-align: left;
+  margin-top: 0px;
+}
+p {
+  margin: 0px;
+}
+
+.price-span {
+  font-weight: normal;
+}
+
+.price-change-positive {
+  color: #2e8b57;
+}
+
+.price-change-negative {
+  color: #b22222;
+}
+
+/* Order Type Buttons */
 .order-type-toggle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-  }
-  
-  .order-btn {
-    padding: 8px 15px;
-    width: 100%;
-    border: 1px solid #000000;
-    border-radius: 10px;
-    background-color: rgb(43, 41, 41);
-    cursor: pointer;
-    font-weight: bold;
-    color: #ffffff;
-    transition: background-color 0.3s;
-  }
-  
-  .order-btn:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .order-btn.active {
-    background-color: #68f068; /* Light green background when active */
-  }
-  .divider {
-    width: 5px; /* Make the divider thin */
-    height: 20px; /* Control the height of the divider */
-    background-color: #333; /* Color of the divider */
-    margin: 0 5px; /* Padding to space the divider */
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}
 
-  .quantity-input-container {
-    margin-top: 1px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .quantity-label {
-    font-size: 1rem;
-    margin-bottom: 2px;
-  }
-  
-  .quantity-input {
-    padding: 8px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    height: 12px;
-    width: 90%;
-    max-width: 200px; /* Controls input width */
-    margin-bottom: 5px;
-  }
-  
-  .quantity-input:focus {
-    outline: none;
-  }
+.order-btn {
+  padding: 8px 15px;
+  width: 100%;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  background-color: rgb(43, 41, 41);
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  transition: background-color 0.3s;
+}
 
-  .hidden {
-    visibility: hidden;
-  }
+.order-btn:hover {
+  background-color: #f0f0f0;
+}
 
+.order-btn.active {
+  background-color: #68f068; /* Light green background when active */
+}
+.divider {
+  width: 5px; /* Make the divider thin */
+  height: 20px; /* Control the height of the divider */
+  background-color: #333; /* Color of the divider */
+  margin: 0 5px; /* Padding to space the divider */
+}
+
+.quantity-input-container {
+  margin-top: 1px;
+  display: flex;
+  flex-direction: column;
+}
+
+.quantity-label {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.quantity-input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  height: 12px;
+  width: 90%;
+  max-width: 200px; /* Controls input width */
+  margin-bottom: 5px;
+}
+
+.quantity-input:focus {
+  outline: none;
+}
+
+.hidden {
+  visibility: hidden;
+}

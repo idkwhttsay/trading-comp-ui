@@ -1,5 +1,5 @@
-import React from "react";
-import "./RecentOrdersWidget.css";
+import React from 'react';
+import './RecentOrdersWidget.css';
 
 const RecentOrdersWidget = ({ orders }) => {
   return (
@@ -17,7 +17,7 @@ const RecentOrdersWidget = ({ orders }) => {
           {orders && orders.length > 0 ? (
             orders.map((order, index) => (
               <tr key={index}>
-                <td>{order.is_buy ? "Buy" : "Sell"}</td>
+                <td>{order.is_buy ? 'Buy' : 'Sell'}</td>
                 <td>${order.price.toFixed(2)}</td>
                 <td>{order.quantity}</td>
                 <td>${(order.price * order.quantity).toFixed(2)}</td> {/* Calculate Total Value */}
@@ -25,7 +25,7 @@ const RecentOrdersWidget = ({ orders }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: "center" }}>
+              <td colSpan="4" style={{ textAlign: 'center' }}>
                 No orders available for this stock.
               </td>
             </tr>

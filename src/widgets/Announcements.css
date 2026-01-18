@@ -1,9 +1,9 @@
 .Announcement {
-    background-color: black; /* Dark grey background */
-    color: #fff; /* White text */
-    padding: 5px;
-    margin: 5px 0; /* Spacing between announcements */
-    border-radius: 8px;
-    font-size: 14px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
-  }
+  background-color: black; /* Dark grey background */
+  color: #fff; /* White text */
+  padding: 5px;
+  margin: 5px 0; /* Spacing between announcements */
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+}

@@ -1,8 +1,7 @@
 import React from 'react';
 import './Contestdash.css';
-import SampleAnnouncements from '../SampleData/SampleAnnouncementss.json';
 import Announcement from './Announcement.js';
-import DataFinder from "../HelperClasses/DataFinder";
+import DataFinder from '../HelperClasses/DataFinder';
 
 const Contestdash = () => {
   return (

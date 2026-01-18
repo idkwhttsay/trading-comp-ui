@@ -1,5 +1,5 @@
-import React from "react";
-import "./PriceLevelWidgets.css";
+import React from 'react';
+import './PriceLevelWidgets.css';
 
 const PriceLevelWidget = ({ price, quantity, amount, className }) => {
   return (
@@ -12,4 +12,3 @@ const PriceLevelWidget = ({ price, quantity, amount, className }) => {
 };
 
 export default PriceLevelWidget;
-

@@ -1,6 +1,4 @@
 /* ImageDisplayWidget.css */
-  
-
 
 .team-logo {
   width: calc(100% - 6px); /* Scale image to fit the width */
@@ -8,4 +6,3 @@
   object-fit: contain; /* Preserve aspect ratio and fit within the container */
   border-radius: 15px; /* Add rounded edges */
 }
-  

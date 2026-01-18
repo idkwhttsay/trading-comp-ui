@@ -1,16 +1,16 @@
 .chart-widget-container {
-    /* If this is the widget container, ensure it has a definite size. */
-    width: 100%;
-    height: 100%; /* Or any height you want, e.g. 600px or a flex-based rule. */
-    /* If using flex layout, ensure it can grow/shrink properly, e.g. flex: 1; */
-  }
-  
-  .chart-widget-container > div {
-    /* Often it helps to ensure the ReactApexChart wrapper also fills up */
-    width: 100%;
-    height: 100%;
-    width: 100%;
-    height: 100%;
-    font-family: 'Roboto', sans-serif;
-    color: #1a1a1a;
-  }
+  /* If this is the widget container, ensure it has a definite size. */
+  width: 100%;
+  height: 100%; /* Or any height you want, e.g. 600px or a flex-based rule. */
+  /* If using flex layout, ensure it can grow/shrink properly, e.g. flex: 1; */
+}
+
+.chart-widget-container > div {
+  /* Often it helps to ensure the ReactApexChart wrapper also fills up */
+  width: 100%;
+  height: 100%;
+  width: 100%;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  color: #1a1a1a;
+}

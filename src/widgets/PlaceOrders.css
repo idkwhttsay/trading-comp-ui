@@ -3,11 +3,11 @@
 
 /* Main Widget Container */
 .widget-container {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Align vertically */
-    font-family: 'Roboto', sans-serif !important; /* Apply Roboto font */
-    width: 100%;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Align vertically */
+  font-family: 'Roboto', sans-serif !important; /* Apply Roboto font */
+  width: 100%;
 }
 
 /* Buy & Sell Row - Fully Centered */
@@ -19,193 +19,196 @@
   width: 100%;
   flex-direction: row;
   background-color: #1a1a1a;
-  padding : 20px;
+  padding: 20px;
   border-radius: 5px;
 }
 
 .OrderType {
-    display: flex;
-    flex-direction: column;  /* Ensure stacking vertically */
-    align-items: center;  /* Center elements horizontally */
-    gap: 5px; 
-    background-color: #1a1a1a;
-    border-radius: 5px;
-    padding : 14px;
+  display: flex;
+  flex-direction: column; /* Ensure stacking vertically */
+  align-items: center; /* Center elements horizontally */
+  gap: 5px;
+  background-color: #1a1a1a;
+  border-radius: 5px;
+  padding: 14px;
 }
 
 .pnl-heading {
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.6); /* White and translucent */
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0;
-  }
-
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6); /* White and translucent */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
 
 .SelectedStockWidget {
-    padding : 20px;
-    background-color: #1a1a1a;
-    height: 100%;
-    border-radius: 5px;
-    align-items: center; 
-  }
+  padding: 20px;
+  background-color: #1a1a1a;
+  height: 100%;
+  border-radius: 5px;
+  align-items: center;
+}
 
 .buy-sell-column-1 {
-    display: flex;
-    flex-direction: column;
-    gap : 10px;
-    width : 33%
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 33%;
 }
 
 .buy-sell-column-2 {
-    display: flex;
-    flex-direction: column;
-    gap : 10px;
-    width : 33%;
-    align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 33%;
+  align-items: flex-end;
 }
 
 .buy-sell-column-3 {
-    display: flex;
-    flex-direction: column;
-    gap : 10px;
-    width : 33%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 33%;
 }
 
 .choose-title {
-    font-size: 16px; /* Optional: Adjust font size */
-    text-align: center;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.6); /* White and translucent */
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0;
+  font-size: 16px; /* Optional: Adjust font size */
+  text-align: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6); /* White and translucent */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
 }
 
-.market-button, .limit-button {
-    margin: 2px; 
-    width: 50%;
-    background-color: transparent;
-    color: white;
-    border-radius: 3px;
-    transition: all 0.3s ease;
-    text-align: center;
-    text-decoration: none;
-    box-shadow: none;
-    border: none;
+.market-button,
+.limit-button {
+  margin: 2px;
+  width: 50%;
+  background-color: transparent;
+  color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: none;
+  border: none;
 }
 
-.market-button:hover, .limit-button:hover,
-.market-button:focus, .limit-button:focus, 
-.market-button.selected, .limit-button.selected,
-.market-button:active, .limit-button:active {
-    background-color: white; /* Light grey background on hover */
-    border: 2px solid white; /* White border on hover */
-    color: black; /* Text remains black */
-    box-shadow: none; /* No shadow for flatness */
+.market-button:hover,
+.limit-button:hover,
+.market-button:focus,
+.limit-button:focus,
+.market-button.selected,
+.limit-button.selected,
+.market-button:active,
+.limit-button:active {
+  background-color: white; /* Light grey background on hover */
+  border: 2px solid white; /* White border on hover */
+  color: black; /* Text remains black */
+  box-shadow: none; /* No shadow for flatness */
 }
 
 .market-button.selected {
-    background-color: white;  
-    color: black;
+  background-color: white;
+  color: black;
 }
 
 .limit-button.selected {
-    background-color: white;  
-    color: black;
+  background-color: white;
+  color: black;
 }
-
 
 .buy-button,
 .sell-button {
-    width: 120px; /* Same width for all elements */
-    height: 25px; /* Same height for all elements */
-    text-align: center;
-    font-size: 16px; /* Consistent font size */
-    font-weight: bold;
-    border-radius: 8px; /* Rounded corners */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Roboto', sans-serif !important;
+  width: 120px; /* Same width for all elements */
+  height: 25px; /* Same height for all elements */
+  text-align: center;
+  font-size: 16px; /* Consistent font size */
+  font-weight: bold;
+  border-radius: 8px; /* Rounded corners */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto', sans-serif !important;
 }
 
 .quantity-input {
-    margin-top: 4px; 
-    height: 20px !important; /* Same height for all elements */
-    text-align: center;
-    font-size: 16px; /* Consistent font size */
-    border-radius: 8px; /* Rounded corners */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Roboto', sans-serif !important;
+  margin-top: 4px;
+  height: 20px !important; /* Same height for all elements */
+  text-align: center;
+  font-size: 16px; /* Consistent font size */
+  border-radius: 8px; /* Rounded corners */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto', sans-serif !important;
 }
 .price-input {
-    height: 20px; /* Same height for all elements */
-    text-align: center;
-    font-size: 16px; /* Consistent font size */
-    border-radius: 8px; /* Rounded corners */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Roboto', sans-serif !important;
+  height: 20px; /* Same height for all elements */
+  text-align: center;
+  font-size: 16px; /* Consistent font size */
+  border-radius: 8px; /* Rounded corners */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto', sans-serif !important;
 }
 
 /* Input Fields */
 .quantity-input,
 .price-input {
-    width: 80%;
-    border: 1px solid #ccc;
-    background-color: white;
-    color: black;
+  width: 80%;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: black;
 }
 
 /* Ensuring Inputs Align Properly */
 .quantity-input,
 .price-input {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Focus Effect for Input Fields */
 .quantity-input:focus,
 .price-input:focus {
-    outline: none;
-    border-color: #2ea44f;
-    box-shadow: 0 0 5px rgba(46, 164, 79, 0.5);
+  outline: none;
+  border-color: #2ea44f;
+  box-shadow: 0 0 5px rgba(46, 164, 79, 0.5);
 }
 
 /* Placeholder Text */
 .placeholder-visible::placeholder {
-    color: #888;
-    opacity: 1;
+  color: #888;
+  opacity: 1;
 }
 
 /* Buttons */
 .buy-button,
 .sell-button {
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
 }
 
 /* Buy Button */
 .buy-button {
-    background-color: #2ea44f;
+  background-color: #2ea44f;
 }
 
 .buy-button:hover {
-    background-color: #22863a;
+  background-color: #22863a;
 }
 
 /* Sell Button */
 .sell-button {
-    background-color: #d73a49;
+  background-color: #d73a49;
 }
 
 .sell-button:hover {
-    background-color: #b5272c;
+  background-color: #b5272c;
 }

@@ -1,7 +1,7 @@
 /* For the entire scroll bar */
 ::-webkit-scrollbar {
-  width: 8px; 
-  background-color: rgba(0, 0, 0, 0); 
+  width: 8px;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 /* For the scrollbar track */
@@ -16,7 +16,7 @@
 /* For the scrollbar thumb (scrolling handle) */
 ::-webkit-scrollbar-thumb {
   background-color: #444; /* Black scrollbar thumb */
-  /*border-radius: ; Rounded edges for the scrollbar thumb */ 
+  /*border-radius: ; Rounded edges for the scrollbar thumb */
   border-radius: 15px;
 }
 
@@ -25,7 +25,8 @@
   background-color: black; /* Slightly lighter black when hovered */
 }
 
-html, body {
+html,
+body {
   height: 100vh;
   width: 100vw;
   margin: 0;
@@ -69,15 +70,15 @@ html, body {
 }
 
 .widget {
-    background-color: #242323; /* Dark grey background */
-    color: white; /* White text color */
-    border: 1px solid #000; /* Black border */
-    border-radius: 8px;
-    padding: 3px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+  background-color: #242323; /* Dark grey background */
+  color: white; /* White text color */
+  border: 1px solid #000; /* Black border */
+  border-radius: 8px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
 }
 
 /**
@@ -99,7 +100,8 @@ Column 1
   padding: 3px;
 }
 
-.auctionWidget, .profileWidget {
+.auctionWidget,
+.profileWidget {
   width: 50%; /* Adjust the width to fit both widgets horizontally */
   height: 100%; /* Ensure they fill the available height */
 }
@@ -107,7 +109,6 @@ Column 1
 .messageViewer {
   height: 20%;
 }
-
 
 .equities {
   height: 30%;
@@ -134,8 +135,9 @@ Column 2
   padding: 10px;
 }
 
-.selected-stock, .order-type {
-  width: 20%; 
+.selected-stock,
+.order-type {
+  width: 20%;
   height: 100%;
 }
 
@@ -149,7 +151,6 @@ Column 2
 
 .position-info {
   height: 15%;
-
 }
 
 .trade-table {

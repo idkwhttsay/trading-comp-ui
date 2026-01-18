@@ -7,7 +7,7 @@
   color: #e0e0e0;
   width: 100%;
   /* Switch to Roboto and bump the size up slightly */
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 14px;
   border-radius: 14px;
 }
@@ -31,12 +31,11 @@
   margin-left: 10px;
 }
 
-
 .pnl-table-container {
   /* Let this container expand to use leftover space */
   flex: 1;
   /* Required in many browsers to allow scroll in a flex child */
-  min-height: 0; 
+  min-height: 0;
   border-radius: 8px;
   width: 100%;
 }

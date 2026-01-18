@@ -5,9 +5,9 @@
  * @returns {number} The truncated number.
  */
 function truncateDecimal(num, decimalPlaces) {
-    if (decimalPlaces < 0) throw new Error("Decimal places must be non-negative.");
-    const factor = Math.pow(10, decimalPlaces);
-    return Math.trunc(num * factor) / factor;
+  if (decimalPlaces < 0) throw new Error('Decimal places must be non-negative.');
+  const factor = Math.pow(10, decimalPlaces);
+  return Math.trunc(num * factor) / factor;
 }
 
 export { truncateDecimal };

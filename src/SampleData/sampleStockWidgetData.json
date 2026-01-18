@@ -1,15 +1,14 @@
 [
-    {
-      "ticker": "AAPL",
-      "price": 239.65,
-      "change": "+10.48",
-      "percentageChange": "+23"
-    },
-    {
-      "ticker": "GOOGL",
-      "price": 2789.24,
-      "change": "+50.18",
-      "percentageChange": "+3"
-    }
-  ]
-  
+  {
+    "ticker": "AAPL",
+    "price": 239.65,
+    "change": "+10.48",
+    "percentageChange": "+23"
+  },
+  {
+    "ticker": "GOOGL",
+    "price": 2789.24,
+    "change": "+50.18",
+    "percentageChange": "+3"
+  }
+]
