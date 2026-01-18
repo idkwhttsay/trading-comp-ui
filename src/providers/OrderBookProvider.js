@@ -7,8 +7,8 @@ export function OrderBookProvider({ children }) {
     const [orderBooks, setOrderBooks] = useState(() => orderBookInstance.orderBooks || {});
 
     const handleUpdate = useCallback((nextBooks) => {
-        // OrderBook notifies with its internal `this.orderBooks` object, which is mutated in place.
-        // React state updates are referential; ensure a new reference so consumers re-render.
+        // OrderBook mutates its internal `orderBooks` in place.
+        // Ensure a new reference so React consumers always re-render.
         setOrderBooks(nextBooks ? { ...nextBooks } : {});
     }, []);
 
