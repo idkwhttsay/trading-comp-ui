@@ -1,44 +1,44 @@
 name: CI
 
 on:
-  push:
-    branches: ["**"]
-  pull_request:
+    push:
+        branches: ['**']
+    pull_request:
 
 permissions:
-  contents: read
+    contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  build-test:
-    runs-on: ubuntu-latest
+    build-test:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Format check
-        run: npm run format:check
+            - name: Format check
+              run: npm run format:check
 
-      - name: Lint
-        run: npm run lint
+            - name: Lint
+              run: npm run lint
 
-      - name: Test
-        env:
-          CI: "true"
-        run: npm test -- --watchAll=false
+            - name: Test
+              env:
+                  CI: 'true'
+              run: npm test -- --watchAll=false
 
-      - name: Build
-        run: npm run build
+            - name: Build
+              run: npm run build
