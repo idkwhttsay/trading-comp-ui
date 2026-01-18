@@ -26,13 +26,13 @@ class SocketManager {
             buildupData.sessionToken
         )}&Username=${encodeURIComponent(buildupData.username)}`; */
         
-        /*const brokerURL = `ws://localhost:8080/exchange-socket?Session-ID=${encodeURIComponent(
-            buildupData.sessionToken
-        )}&Username=${encodeURIComponent(buildupData.username)}`*/
-	
-        const brokerURL = `ws://ec2-18-220-60-154.us-east-2.compute.amazonaws.com:8080/exchange-socket?Session-ID=${encodeURIComponent(
+        const brokerURL = `ws://localhost:8080/exchange-socket?Session-ID=${encodeURIComponent(
             buildupData.sessionToken
         )}&Username=${encodeURIComponent(buildupData.username)}`
+	
+        // const brokerURL = `ws://ec2-18-220-60-154.us-east-2.compute.amazonaws.com:8080/exchange-socket?Session-ID=${encodeURIComponent(
+        //     buildupData.sessionToken
+        // )}&Username=${encodeURIComponent(buildupData.username)}`
 
         // Create a new STOMP client
         this.stompClient = new Client({
