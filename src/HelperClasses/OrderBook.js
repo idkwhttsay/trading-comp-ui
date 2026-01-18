@@ -126,6 +126,11 @@ class OrderBook {
         this._notifySubscribers(); // Notify React components
     }
 
+    resetFromSnapshot(rawOrderBook) {
+        this.orderBooks = {};
+        this._createSortedMap(rawOrderBook);
+    }
+
 
 
     // Convert the object to a string representation

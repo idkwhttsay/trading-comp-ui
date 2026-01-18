@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { buildupHandler, getBuildupData, HTTPStatusCodes } from "../HelperClasses/api.js";
+import socketManager from "../HelperClasses/SocketManager";
 import "./AuthPage.css";
 
 let initialized = false;
@@ -38,6 +39,7 @@ const AuthPage = () => {
                 if (data && data.status === HTTPStatusCodes.OK) {
                     setAuth(true);
                     console.log("✅ Authentication successful for:", data.username);
+                    socketManager.connect();
                     navigate("/dashboard");
                 } else {
                     setAuth(false);

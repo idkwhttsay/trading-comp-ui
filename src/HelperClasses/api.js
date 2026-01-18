@@ -1,4 +1,3 @@
-import socketManager from "../HelperClasses/SocketManager";
 import orderBookInstance from "./OrderBook";
 import {controls} from "./controls";
 
@@ -121,7 +120,6 @@ export function buildupHandler(data, subscriber) {
                 console.log("Build-up complete. Initiating WebSocket connection...");
                 buildupData.orderBookData = JSON.parse(buildupData.orderBookData);
                 setTickers(Object.keys(buildupData.orderBookData));
-                socketManager.connect(); // Initiates WebSocket connection
                 orderBookInstance._createSortedMap(buildupData.orderBookData)
             } else {
                 console.error("Buildup data is incomplete. Cannot connect to WebSocket.");
@@ -179,4 +177,60 @@ export function getTickers() {
 }
 export function getMessageList() {
     return messages;
+}
+
+// --- Update-recovery endpoints (seq) ---
+
+async function requestWithAuth(method, pathWithQuery) {
+    const buildupData = getBuildupData();
+    if (!buildupData || !buildupData.sessionToken || !buildupData.username) {
+        return {
+            status: HTTPStatusCodes.UNAUTHORIZED,
+            message: { errorMessage: "Missing session credentials", errorCode: ErrorCodes.AUTHENTICATION_FAILED },
+        };
+    }
+
+    const url = new URL(URI + pathWithQuery);
+    // Backends commonly auth these endpoints the same way as the websocket.
+    url.searchParams.set("Session-ID", buildupData.sessionToken);
+    url.searchParams.set("Username", buildupData.username);
+
+    const resp = await fetch(url.toString(), {
+        method,
+        headers: {
+            "Accept": "application/json",
+            ...(method !== "GET" ? { "Content-Type": "application/json" } : {}),
+        },
+        body: method !== "GET" ? JSON.stringify({ username: buildupData.username, sessionToken: buildupData.sessionToken }) : undefined,
+    });
+
+    let json;
+    try {
+        json = await resp.json();
+    } catch (_) {
+        json = { message: { errorMessage: "Non-JSON response" } };
+    }
+    json.status = resp.status;
+    return json;
+}
+
+export async function fetchSnapshot() {
+    // Prefer GET (as per docs), but fall back to POST if server is implemented that way.
+    const getResp = await requestWithAuth("GET", "/snapshot");
+    if (getResp.status === HTTPStatusCodes.OK) return getResp;
+    if (getResp.status === 404 || getResp.status === 405) {
+        return await requestWithAuth("POST", "/snapshot");
+    }
+    return getResp;
+}
+
+export async function fetchUpdateBySeq(seq) {
+    const safeSeq = Number(seq);
+    if (!Number.isFinite(safeSeq) || safeSeq < 0) {
+        return {
+            status: HTTPStatusCodes.BAD_REQUEST,
+            message: { errorMessage: "Invalid seq", errorCode: ErrorCodes.BAD_INPUT },
+        };
+    }
+    return await requestWithAuth("GET", `/updates?seq=${encodeURIComponent(String(safeSeq))}`);
 }
