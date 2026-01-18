@@ -2,6 +2,9 @@ import sampleStockWidgetData from '../SampleData/sampleStockWidgetData.json';
 import SampleAnnouncements from '../SampleData/SampleAnnouncementss.json';
 import SampleOrderBookData from '../SampleData/SampleOrderBookDatas.json';
 import samplePnLData from '../SampleData/samplePnlData.json';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('DataFinder');
 
 export default class DataHelper {
     /**
@@ -13,7 +16,7 @@ export default class DataHelper {
      */
     static getDataMatch(dataFile, inputField, matchValue) {
         if (!Array.isArray(dataFile)) {
-            console.error('Error with JSON file');
+            log.error('Error with JSON file', { inputField, matchValue });
             return null;
         }
 
@@ -29,7 +32,7 @@ export default class DataHelper {
      */
     static getDataFilter(dataFile, filterField, filterValue) {
         if (!Array.isArray(dataFile)) {
-            console.error('Error with JSON file');
+            log.error('Error with JSON file', { filterField, filterValue });
             return null;
         }
         return dataFile.filter((item) => item[filterField] === filterValue);
@@ -372,7 +375,7 @@ export default class DataHelper {
                 { ticker: 'MSFT', is_buy: false, price: 299.99, quantity: 20 },
             ];
         } else {
-            console.error('Invalid API Key');
+            log.warn('Invalid API key for open orders');
             return [];
         }
     }

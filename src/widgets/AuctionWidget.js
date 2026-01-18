@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 // import DataFinder from "../HelperClasses/DataFinder";
 import './AuctionWidget.css';
 import { bidAuctionHandler } from '../HelperClasses/api';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('AuctionWidget');
 
 // const calculatePnL = () => {
 //     const pnlResults = DataFinder.getPositionData("12345").map(trade => {
@@ -41,7 +44,7 @@ const AuctionWidget = () => {
 
     const handleSubmit = () => {
         // alert(`Submitted value: ${inputValue}`);
-        console.log(`Auctioned value: ${inputValue}`);
+        log.info('Auction bid submitted', { inputValue });
         bidAuctionHandler({ bid: inputValue }, setSubscribeVar);
     };
 

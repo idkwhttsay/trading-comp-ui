@@ -1,12 +1,15 @@
 import React from 'react';
 import './StockWidget.css';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('StockWidget');
 
 const StockWidget = ({ ticker, selected }) => {
-    console.log('🔍 StockWidget received ticker:', ticker);
+    log.debug('Received ticker', { ticker });
 
     // Ensure ticker is always a valid string
     if (!ticker || typeof ticker !== 'string') {
-        console.error('❌ Invalid ticker received:', ticker);
+        log.warn('Invalid ticker received', { ticker });
         return <div className="stock-widget"> Build Up First! </div>;
     }
 

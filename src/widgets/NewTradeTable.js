@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './TradeTable.css';
 import userPortfolio from '../HelperClasses/UserPortfolio';
 import { removeHandler } from '../HelperClasses/api.js';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('NewTradeTable');
 
 const TradeTable = () => {
     const [positions, setPositions] = useState({});
@@ -25,7 +28,7 @@ const TradeTable = () => {
     }, []);
 
     const handleRemoveOrder = (orderId) => {
-        console.log(`Removing order with ID: ${orderId}`);
+        log.info('Removing order', { orderId });
         removeHandler({ orderId: orderId });
     };
 

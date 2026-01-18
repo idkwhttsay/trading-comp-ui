@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { marketOrderHandler } from '../HelperClasses/api';
 import './PlaceOrders.css';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('MarketOrderWidget');
 
 const MarketOrdersWidget = ({ selectedStock }) => {
     const [amount, setAmount] = useState(10);
@@ -8,18 +11,18 @@ const MarketOrdersWidget = ({ selectedStock }) => {
 
     const handleBuy = () => {
         if (!selectedStock) {
-            console.error('❌ No stock selected for buying.');
+            log.warn('No stock selected for buying');
             return;
         }
 
         marketOrderHandler({ ticker: selectedStock, volume: amount, isBid: true }, setSubscribeVar);
 
-        console.log(`🟢 Buy order placed for ${amount} shares of ${selectedStock} at market.`);
+        log.info('Buy market order placed', { selectedStock, amount });
     };
 
     const handleSell = () => {
         if (!selectedStock) {
-            console.error('❌ No stock selected for selling.');
+            log.warn('No stock selected for selling');
             return;
         }
 
@@ -28,7 +31,7 @@ const MarketOrdersWidget = ({ selectedStock }) => {
             setSubscribeVar,
         );
 
-        console.log(`🔴 Sell order placed for ${amount} shares of ${selectedStock} at market.`);
+        log.info('Sell market order placed', { selectedStock, amount });
     };
 
     return (

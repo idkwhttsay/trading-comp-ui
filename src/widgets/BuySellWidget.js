@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import samplePnLData from '../SampleData/samplePnlData.json';
 import sampleStockWidgetData from '../SampleData/sampleStockWidgetData.json';
 import DataFinder from '../HelperClasses/DataFinder';
+import { createLogger } from '../util/logger';
+
+const log = createLogger('BuySellWidget');
 
 const BuyButton = ({ selectedStock }) => {
     //const stock = sampleStockWidgetData.find(stock => stock.ticker === selectedStock);
@@ -50,8 +53,14 @@ const BuyButton = ({ selectedStock }) => {
 
     const handleCompleteClick = (type) => {
         setIsModalOpen(false);
-        console.log('Order Complete');
-        console.log(price, orderType, quantity, limitPrice, type);
+        log.info('Order complete (UI only)', {
+            type,
+            orderType,
+            quantity,
+            limitPrice,
+            price,
+            selectedStock,
+        });
     };
 
     // Recalculate modal position on window resize
