@@ -1,13 +1,21 @@
 import { Client } from "@stomp/stompjs";
-import { getBuildupData } from "../HelperClasses/api";
+import { fetchSnapshot, fetchUpdateBySeq, getBuildupData, HTTPStatusCodes } from "../HelperClasses/api";
 import orderBookInstance from "../HelperClasses/OrderBook";
 import userPortfolio from "./UserPortfolio";
 import CandlestickTracker from "./CandlestickTracker"
+import { SeqBuffer } from "./SeqBuffer";
 
 class SocketManager {
     constructor() {
         this.stompClient = null;
         this.connected = false;
+
+        // Update recovery (seq) state
+        this.lastAppliedSeq = null;
+        this.seqBuffer = new SeqBuffer(1000);
+        this.pendingBySeq = new Map();
+        this.gapFillInProgress = false;
+        this.needsResnapshot = false;
     }
 
     // Initialize and configure the WebSocket connection
@@ -18,6 +26,11 @@ class SocketManager {
         if (!buildupData || !buildupData.sessionToken || !buildupData.username) {
             console.error("Buildup data is incomplete or unavailable!");
             return;
+        }
+
+        // Initialize seq from a fresh snapshot. If this fails, we can still run, but gap-fill may be limited.
+        if (this.lastAppliedSeq === null) {
+            await this.resnapshotAndResetSeq({ reason: "initial-connect" });
         }
 
         // Construct WebSocket URL with sessionId and username
@@ -46,9 +59,14 @@ class SocketManager {
         });
 
         // Define event handlers
-        this.stompClient.onConnect = (frame) => {
+        this.stompClient.onConnect = async (frame) => {
             this.connected = true;
             console.log("Connected to WebSocket:", frame);
+
+            if (this.needsResnapshot) {
+                await this.resnapshotAndResetSeq({ reason: "reconnect" });
+                this.needsResnapshot = false;
+            }
 
             // Subscribe to topics (public and private)
             this.subscribeToTopics();
@@ -56,6 +74,11 @@ class SocketManager {
 
         this.stompClient.onWebSocketError = (error) => {
             console.error("WebSocket Error:", error);
+        };
+
+        this.stompClient.onWebSocketClose = () => {
+            // On reconnect, re-onboard from snapshot; local state may be stale.
+            this.needsResnapshot = true;
         };
 
         this.stompClient.onStompError = (frame) => {
@@ -100,13 +123,160 @@ class SocketManager {
     }
 
     // Handle incoming public orderbook messages
-    handleOrderbookMessage(data) {
-        //console.log("Handling orderbook message:", data);
+    async handleOrderbookMessage(data) {
+        const incomingSeq = this.extractSeq(data);
+        const updates = this.extractUpdates(data);
 
-        const updates = JSON.parse(data.content);
-        //console.log("OrderBook Update", updates)
-        // Pass updates directly to the OrderBook instance
-        orderBookInstance.updateVolumes(updates);
+        // Heartbeat / non-update payloads: do not mutate orderbook.
+        if (!updates) {
+            return;
+        }
+
+        // If server isn't sending seq yet, fall back to best-effort.
+        if (incomingSeq === null) {
+            orderBookInstance.updateVolumes(updates);
+            return;
+        }
+
+        // Deduplicate
+        if (this.seqBuffer.has(incomingSeq)) {
+            return;
+        }
+
+        // If we don't have a baseline yet, try to snapshot now.
+        if (this.lastAppliedSeq === null) {
+            await this.resnapshotAndResetSeq({ reason: "missing-baseline" });
+        }
+
+        // During a gap-fill, buffer incoming updates by seq.
+        if (this.gapFillInProgress) {
+            this.pendingBySeq.set(incomingSeq, updates);
+            return;
+        }
+
+        await this.applyWithGapFill(incomingSeq, updates);
+        await this.drainPendingInOrder();
+    }
+
+    extractSeq(data) {
+        if (!data || typeof data !== "object") return null;
+        const raw = data.seq ?? data.sequence ?? data.sequenceNumber;
+        const num = Number(raw);
+        return Number.isFinite(num) ? num : null;
+    }
+
+    extractUpdates(data) {
+        if (!data || typeof data !== "object") return null;
+        const content = data.content;
+
+        // Some servers may return updates directly instead of a JSON string.
+        if (Array.isArray(content)) return content;
+
+        if (typeof content !== "string") {
+            return null;
+        }
+
+        try {
+            const parsed = JSON.parse(content);
+            return Array.isArray(parsed) ? parsed : null;
+        } catch (_) {
+            return null;
+        }
+    }
+
+    markApplied(seq) {
+        this.seqBuffer.add(seq);
+        this.lastAppliedSeq = seq;
+    }
+
+    async applyWithGapFill(incomingSeq, updates) {
+        // If we somehow receive an older seq, just dedupe/skip.
+        if (this.lastAppliedSeq !== null && incomingSeq <= this.lastAppliedSeq) {
+            this.seqBuffer.add(incomingSeq);
+            return;
+        }
+
+        this.gapFillInProgress = true;
+        try {
+            // Fill missing seqs if we see a gap.
+            if (this.lastAppliedSeq !== null && incomingSeq > this.lastAppliedSeq + 1) {
+                for (let missing = this.lastAppliedSeq + 1; missing < incomingSeq; missing++) {
+                    const ok = await this.fetchAndApplyMissingSeq(missing);
+                    if (!ok) {
+                        // Out of retention or inconsistent; snapshot and stop attempting further incremental fill.
+                        await this.resnapshotAndResetSeq({ reason: "invalid-seq" });
+                        break;
+                    }
+                }
+            }
+
+            // Apply the incoming websocket update.
+            if (!this.seqBuffer.has(incomingSeq)) {
+                orderBookInstance.updateVolumes(updates);
+                this.markApplied(incomingSeq);
+            }
+        } finally {
+            this.gapFillInProgress = false;
+        }
+    }
+
+    async fetchAndApplyMissingSeq(seq) {
+        const resp = await fetchUpdateBySeq(seq);
+        if (!resp || resp.status !== HTTPStatusCodes.OK) {
+            return false;
+        }
+
+        // Accept either { content: "[...]" } or { update: ... } shapes.
+        const updates = this.extractUpdates(resp) || this.extractUpdates(resp.update ? { content: resp.update } : null);
+        if (!updates) {
+            return false;
+        }
+
+        if (!this.seqBuffer.has(seq)) {
+            orderBookInstance.updateVolumes(updates);
+            this.markApplied(seq);
+        }
+        return true;
+    }
+
+    async resnapshotAndResetSeq({ reason }) {
+        try {
+            const snap = await fetchSnapshot();
+            if (!snap || snap.status !== HTTPStatusCodes.OK) {
+                console.warn("⚠ Snapshot request failed:", reason, snap);
+                return;
+            }
+
+            // Accept either { orderBookData, latestSeq } or { snapshot, latestSeq }.
+            const book = snap.orderBookData ?? snap.snapshot ?? snap.orderbook ?? null;
+            const latestSeq = Number(snap.latestSeq ?? snap.seq ?? snap.sequence ?? snap.sequenceNumber);
+
+            if (!book || !Number.isFinite(latestSeq)) {
+                console.warn("⚠ Snapshot missing fields:", snap);
+                return;
+            }
+
+            // If orderBookData is a JSON string, parse it.
+            const parsedBook = typeof book === "string" ? JSON.parse(book) : book;
+
+            orderBookInstance.resetFromSnapshot(parsedBook);
+            this.lastAppliedSeq = latestSeq;
+            this.seqBuffer.clear();
+            this.pendingBySeq.clear();
+            console.log("✅ Resnapshotted orderbook. latestSeq=", latestSeq, "reason=", reason);
+        } catch (e) {
+            console.warn("⚠ Resnapshot failed:", reason, e);
+        }
+    }
+
+    async drainPendingInOrder() {
+        if (this.lastAppliedSeq === null) return;
+        while (this.pendingBySeq.has(this.lastAppliedSeq + 1)) {
+            const nextSeq = this.lastAppliedSeq + 1;
+            const nextUpdates = this.pendingBySeq.get(nextSeq);
+            this.pendingBySeq.delete(nextSeq);
+            await this.applyWithGapFill(nextSeq, nextUpdates);
+        }
     }
 
     // Handle incoming private messages
