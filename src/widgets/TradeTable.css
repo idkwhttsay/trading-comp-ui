@@ -1,95 +1,95 @@
 /* TradeTable.css */
 .pnl-dashboard {
-  display: flex;
-  flex-direction: column;
-  /* Fill the parent’s height (assuming the parent is also sized!) */
-  height: 100%;
-  color: #e0e0e0;
-  width: 100%;
-  /* Switch to Roboto and bump the size up slightly */
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    /* Fill the parent’s height (assuming the parent is also sized!) */
+    height: 100%;
+    color: #e0e0e0;
+    width: 100%;
+    /* Switch to Roboto and bump the size up slightly */
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    border-radius: 14px;
 }
 
 .tables-container {
-  display: flex;
-  gap: 20px; /* Space between tables */
-  justify-content: space-between; /* Ensures tables are spread out evenly */
-  flex-wrap: wrap; /* Ensures responsiveness on smaller screens */
-  padding: 10px;
-  flex-direction: row;
+    display: flex;
+    gap: 20px; /* Space between tables */
+    justify-content: space-between; /* Ensures tables are spread out evenly */
+    flex-wrap: wrap; /* Ensures responsiveness on smaller screens */
+    padding: 10px;
+    flex-direction: row;
 }
 
 .table-wrapper {
-  flex: 1;
-  background-color: #121212;
-  border-radius: 10px;
+    flex: 1;
+    background-color: #121212;
+    border-radius: 10px;
 }
 
 .table-wrapper h3 {
-  margin-left: 10px;
+    margin-left: 10px;
 }
 
 .pnl-table-container {
-  /* Let this container expand to use leftover space */
-  flex: 1;
-  /* Required in many browsers to allow scroll in a flex child */
-  min-height: 0;
-  border-radius: 8px;
-  width: 100%;
+    /* Let this container expand to use leftover space */
+    flex: 1;
+    /* Required in many browsers to allow scroll in a flex child */
+    min-height: 0;
+    border-radius: 8px;
+    width: 100%;
 }
 
 .pnl-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow-y: auto;
-  overflow-x: auto;
-  background-color: #121212;
+    width: 100%;
+    border-collapse: collapse;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: #121212;
 }
 
 .pnl-table thead {
-  background-color: #1e1e1e; /* Dark grey background for headers */
+    background-color: #1e1e1e; /* Dark grey background for headers */
 }
 
 .pnl-table th,
 .pnl-table td {
-  text-align: center;
-  padding: 8px 12px;
+    text-align: center;
+    padding: 8px 12px;
 }
 
 .pnl-table th {
-  color: #ffffff; /* White text for headers */
-  font-weight: normal; /* Subtle header styling */
-  border-bottom: 2px solid #444; /* Header border for separation */
+    color: #ffffff; /* White text for headers */
+    font-weight: normal; /* Subtle header styling */
+    border-bottom: 2px solid #444; /* Header border for separation */
 }
 
 .pnl-table td {
-  border-bottom: 1px solid #333; /* Grey line for row separation */
+    border-bottom: 1px solid #333; /* Grey line for row separation */
 }
 
 .pnl-table .header {
-  background-color: #292929; /* Slightly lighter grey for main header */
+    background-color: #292929; /* Slightly lighter grey for main header */
 }
 
 .header-section {
-  border-right: 1px solid #444; /* Divider between header sections */
+    border-right: 1px solid #444; /* Divider between header sections */
 }
 
 .divider {
-  background-color: black; /* Divider line */
-  width: 2px;
-  padding: 0;
+    background-color: black; /* Divider line */
+    width: 2px;
+    padding: 0;
 }
 
 .pnl-table tbody tr:hover {
-  background-color: #1c1c1c; /* Slightly lighter grey for hover effect */
+    background-color: #1c1c1c; /* Slightly lighter grey for hover effect */
 }
 
 .pnl-table tbody tr:nth-child(even) {
-  background-color: #181818; /* Alternating row background */
+    background-color: #181818; /* Alternating row background */
 }
 
 .pnl-table tbody tr:nth-child(odd) {
-  background-color: #121212; /* Alternating row background */
+    background-color: #121212; /* Alternating row background */
 }

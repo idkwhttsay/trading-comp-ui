@@ -1,26 +1,26 @@
 [
-  {
-    "id": 1,
-    "text": "Breaking News: Global oil prices rise due to supply disruptions in key regions."
-  },
-  {
-    "id": 2,
-    "text": "Reminder: The final submission for the competition is due in 2 hours. Make sure to lock in your trades!"
-  },
-  {
-    "id": 3,
-    "text": "Market Update: Tech stocks surge as positive quarterly earnings reports come in."
-  },
-  {
-    "id": 4,
-    "text": "Tip: Check out the new 'Risk Analysis' tool in the dashboard to refine your trading strategy."
-  },
-  {
-    "id": 5,
-    "text": "Breaking: Federal Reserve announces interest rate hike, markets react with mixed signals."
-  },
-  {
-    "id": 6,
-    "text": "Competition Update: The leaderboard has been updated! Check your rankings now."
-  }
+    {
+        "id": 1,
+        "text": "Breaking News: Global oil prices rise due to supply disruptions in key regions."
+    },
+    {
+        "id": 2,
+        "text": "Reminder: The final submission for the competition is due in 2 hours. Make sure to lock in your trades!"
+    },
+    {
+        "id": 3,
+        "text": "Market Update: Tech stocks surge as positive quarterly earnings reports come in."
+    },
+    {
+        "id": 4,
+        "text": "Tip: Check out the new 'Risk Analysis' tool in the dashboard to refine your trading strategy."
+    },
+    {
+        "id": 5,
+        "text": "Breaking: Federal Reserve announces interest rate hike, markets react with mixed signals."
+    },
+    {
+        "id": 6,
+        "text": "Competition Update: The leaderboard has been updated! Check your rankings now."
+    }
 ]

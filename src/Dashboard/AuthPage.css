@@ -1,59 +1,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 .auth-page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #000; /* Black background */
-  color: #fff; /* White text */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000; /* Black background */
+    color: #fff; /* White text */
 }
 
 .authentication-text {
-  font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .auth-page h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-bottom: 1rem;
 }
 
 .auth-page p {
-  font-size: 1rem;
-  margin-bottom: 1rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
 }
 
 .auth-page input {
-  background-color: #333; /* Dark grey input background */
-  color: #fff;
-  border: 1px solid #555;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 4px;
-  width: 300px;
+    background-color: #333; /* Dark grey input background */
+    color: #fff;
+    border: 1px solid #555;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    width: 300px;
 }
 
 .auth-page input::placeholder {
-  color: #bbb;
+    color: #bbb;
 }
 
 .auth-page button {
-  background-color: #555; /* Darker grey button */
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    background-color: #555; /* Darker grey button */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .auth-page button:hover {
-  background-color: #777;
+    background-color: #777;
 }
 
 .error {
-  color: #ff4d4d; /* Red for errors */
-  margin-top: 10px;
+    color: #ff4d4d; /* Red for errors */
+    margin-top: 10px;
 }

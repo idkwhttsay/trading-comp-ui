@@ -1,7 +1,7 @@
 .Contestdash {
-  max-height: 300px; /* Limit the height to allow scrolling */
-  background-color: #222; /* Dark background for the whole section */
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-height: 300px; /* Limit the height to allow scrolling */
+    background-color: #222; /* Dark background for the whole section */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }

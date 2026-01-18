@@ -1,61 +1,61 @@
 /* Message Viewer Container */
 .message-viewer {
-  background-color: black;
-  color: white;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 400px;
-  font-family: 'Arial', sans-serif;
-  height: 20vh;
-  overflow-y: hidden;
-  display: flex;
-  flex-direction: column;
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    font-family: 'Arial', sans-serif;
+    height: 20vh;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Scrollable Message Box */
 .message-widget {
-  flex-grow: 1; /* Ensures it expands within the 20% height */
-  overflow-y: auto; /* Enables scrolling when messages exceed height */
-  display: flex;
-  flex-direction: column; /* Show newest messages at the bottom */
-  background-color: black;
-  border-radius: 8px;
-  padding: 10px;
+    flex-grow: 1; /* Ensures it expands within the 20% height */
+    overflow-y: auto; /* Enables scrolling when messages exceed height */
+    display: flex;
+    flex-direction: column; /* Show newest messages at the bottom */
+    background-color: black;
+    border-radius: 8px;
+    padding: 10px;
 }
 
 /* Message Styling */
 .message-widget div {
-  padding: 8px 12px;
-  margin: 4px 0;
-  border-radius: 12px;
-  max-width: 80%;
-  word-wrap: break-word;
-  font-size: 12px; /* Sleeker font size */
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  position: relative;
-  color: white;
+    padding: 8px 12px;
+    margin: 4px 0;
+    border-radius: 12px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-size: 12px; /* Sleeker font size */
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    position: relative;
+    color: white;
 }
 
 /* Success Message (Green, Translucent) */
 .message-success {
-  background-color: rgba(25, 135, 84, 0.3); /* More translucent green */
-  border: 1px solid rgba(25, 135, 84, 0.6);
-  align-self: flex-end; /* Align right */
+    background-color: rgba(25, 135, 84, 0.3); /* More translucent green */
+    border: 1px solid rgba(25, 135, 84, 0.6);
+    align-self: flex-end; /* Align right */
 }
 
 /* Error Message (Red, Translucent) */
 .message-error {
-  background-color: rgba(220, 53, 69, 0.3); /* More translucent red */
-  border: 1px solid rgba(220, 53, 69, 0.6);
-  align-self: flex-start; /* Align left */
+    background-color: rgba(220, 53, 69, 0.3); /* More translucent red */
+    border: 1px solid rgba(220, 53, 69, 0.6);
+    align-self: flex-start; /* Align left */
 }
 
 /* Scrollbar Styling */
 .message-widget::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
 .message-widget::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 10px;
+    background-color: #555;
+    border-radius: 10px;
 }

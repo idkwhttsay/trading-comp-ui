@@ -31,37 +31,37 @@ import { bidAuctionHandler } from '../HelperClasses/api';
 // const realizedPnL = pnlData.reduce((total, trade) => total + parseFloat(trade.pnl), 0);
 
 const AuctionWidget = () => {
-  const [inputValue, setInputValue] = useState(0);
-  const [, setSubscribeVar] = useState(true);
+    const [inputValue, setInputValue] = useState(0);
+    const [, setSubscribeVar] = useState(true);
 
-  const handleInputChange = (e) => {
-    const value = parseFloat(e.target.value);
-    setInputValue(value);
-  };
+    const handleInputChange = (e) => {
+        const value = parseFloat(e.target.value);
+        setInputValue(value);
+    };
 
-  const handleSubmit = () => {
-    // alert(`Submitted value: ${inputValue}`);
-    console.log(`Auctioned value: ${inputValue}`);
-    bidAuctionHandler({ bid: inputValue }, setSubscribeVar);
-  };
+    const handleSubmit = () => {
+        // alert(`Submitted value: ${inputValue}`);
+        console.log(`Auctioned value: ${inputValue}`);
+        bidAuctionHandler({ bid: inputValue }, setSubscribeVar);
+    };
 
-  return (
-    <div className="auction-widget">
-      <div className="auction-widget-header">Auction</div>
-      <div className="auction-widget-content">
-        <input
-          type="number"
-          placeholder="Enter auction bid"
-          value={inputValue}
-          onChange={handleInputChange}
-          className="auction-widget-input"
-        />
-        <button className="auction-widget-button" onClick={handleSubmit}>
-          Submit
-        </button>
-      </div>
-    </div>
-  );
+    return (
+        <div className="auction-widget">
+            <div className="auction-widget-header">Auction</div>
+            <div className="auction-widget-content">
+                <input
+                    type="number"
+                    placeholder="Enter auction bid"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    className="auction-widget-input"
+                />
+                <button className="auction-widget-button" onClick={handleSubmit}>
+                    Submit
+                </button>
+            </div>
+        </div>
+    );
 };
 
 export default AuctionWidget;

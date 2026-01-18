@@ -1,31 +1,31 @@
 .pnl-widget {
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-align: center;
-  width: 100%;
-  transition: background 0.3s ease-in-out;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 100%;
+    transition: background 0.3s ease-in-out;
 }
 
 .pnl-positive {
-  background: rgba(0, 255, 0, 0.2); /* Light green for positive PnL */
+    background: rgba(0, 255, 0, 0.2); /* Light green for positive PnL */
 }
 
 .pnl-negative {
-  background: rgba(255, 0, 0, 0.2); /* Light red for negative PnL */
+    background: rgba(255, 0, 0, 0.2); /* Light red for negative PnL */
 }
 
 .pnl-heading {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.6); /* White and translucent */
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 0;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6); /* White and translucent */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
 }
 
 .pnl-value {
-  font-size: 36px;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.8); /* White and translucent */
-  font-family: 'Oswald', sans-serif; /* Tall and narrow font */
-  margin: 0;
+    font-size: 36px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.8); /* White and translucent */
+    font-family: 'Oswald', sans-serif; /* Tall and narrow font */
+    margin: 0;
 }

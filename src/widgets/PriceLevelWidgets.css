@@ -1,47 +1,47 @@
 .price-level-widget {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  font-size: 16px;
-  border-bottom: 1px solid #444;
-  color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    font-size: 16px;
+    border-bottom: 1px solid #444;
+    color: #ffffff;
 }
 
 .price-level-widget .price {
-  flex: 1;
-  text-align: left;
-  color: #d32f2f;
+    flex: 1;
+    text-align: left;
+    color: #d32f2f;
 }
 
 .price-level-widget .buy-amount {
-  flex: 1;
-  text-align: center;
-  color: #29b6f6;
+    flex: 1;
+    text-align: center;
+    color: #29b6f6;
 }
 
 .price-level-widget .sell-amount {
-  flex: 1;
-  text-align: right;
-  color: #f57c00;
+    flex: 1;
+    text-align: right;
+    color: #f57c00;
 }
 
 .ask-row {
-  background-color: rgba(255, 76, 76, 0.2);
+    background-color: rgba(255, 76, 76, 0.2);
 }
 
 .bid-row {
-  background-color: rgba(0, 166, 118, 0.2);
+    background-color: rgba(0, 166, 118, 0.2);
 }
 
 .price {
-  color: white;
+    color: white;
 }
 
 .amount {
-  color: white;
+    color: white;
 }
 
 .quantity {
-  color: white;
+    color: white;
 }

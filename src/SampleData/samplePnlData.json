@@ -1,44 +1,44 @@
 [
-  {
-    "ticker": "NVDA",
-    "price": 134.3,
-    "is_buy": false,
-    "is_sell": true,
-    "quantity": 1
-  },
-  {
-    "ticker": "AMZN",
-    "price": 194.37,
-    "is_buy": true,
-    "is_sell": false,
-    "quantity": 2
-  },
-  {
-    "ticker": "AAPL",
-    "price": 233.14,
-    "is_buy": false,
-    "is_sell": true,
-    "quantity": 19
-  },
-  {
-    "ticker": "TSLA",
-    "price": 116.15,
-    "is_buy": true,
-    "is_sell": false,
-    "quantity": 20
-  },
-  {
-    "ticker": "GOOGL",
-    "price": 2781.91,
-    "is_buy": false,
-    "is_sell": true,
-    "quantity": 5
-  },
-  {
-    "ticker": "MSFT",
-    "price": 342.57,
-    "is_buy": false,
-    "is_sell": true,
-    "quantity": 10
-  }
+    {
+        "ticker": "NVDA",
+        "price": 134.3,
+        "is_buy": false,
+        "is_sell": true,
+        "quantity": 1
+    },
+    {
+        "ticker": "AMZN",
+        "price": 194.37,
+        "is_buy": true,
+        "is_sell": false,
+        "quantity": 2
+    },
+    {
+        "ticker": "AAPL",
+        "price": 233.14,
+        "is_buy": false,
+        "is_sell": true,
+        "quantity": 19
+    },
+    {
+        "ticker": "TSLA",
+        "price": 116.15,
+        "is_buy": true,
+        "is_sell": false,
+        "quantity": 20
+    },
+    {
+        "ticker": "GOOGL",
+        "price": 2781.91,
+        "is_buy": false,
+        "is_sell": true,
+        "quantity": 5
+    },
+    {
+        "ticker": "MSFT",
+        "price": 342.57,
+        "is_buy": false,
+        "is_sell": true,
+        "quantity": 10
+    }
 ]
