@@ -1,20 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import userPortfolio from '../HelperClasses/UserPortfolio';
+import React, { useMemo } from 'react';
+import { usePortfolio } from '../providers';
 import './PnLWidget.css';
 
 const RealizedPnLWidget = () => {
-    const [balance, setBalance] = useState(0);
-
-    useEffect(() => {
-        const handlePortfolioUpdate = (portfolioData) => {
-            setBalance(portfolioData.balance || 0);
-        };
-
-        userPortfolio.subscribe(handlePortfolioUpdate);
-        setBalance(userPortfolio.getPortfolio().balance || 0);
-
-        return () => userPortfolio.unsubscribe(handlePortfolioUpdate);
-    }, []);
+    const portfolio = usePortfolio();
+    const balance = useMemo(() => portfolio?.balance || 0, [portfolio]);
 
     return (
         <div className={`pnl-widget ${balance >= 0 ? 'pnl-positive' : 'pnl-negative'}`}>

@@ -1,31 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import './TradeTable.css';
-import userPortfolio from '../HelperClasses/UserPortfolio';
 import { removeHandler } from '../HelperClasses/api.js';
 import { createLogger } from '../util/logger';
+import { usePortfolio } from '../providers';
 
 const log = createLogger('NewTradeTable');
 
 const TradeTable = () => {
-    const [positions, setPositions] = useState({});
-    const [openOrders, setOpenOrders] = useState([]);
-
-    useEffect(() => {
-        const handlePortfolioUpdate = (portfolioData) => {
-            setPositions(portfolioData.positions || {});
-            setOpenOrders(portfolioData.Orders || []);
-        };
-
-        userPortfolio.subscribe(handlePortfolioUpdate);
-
-        const currentPortfolio = userPortfolio.getPortfolio();
-        setPositions(currentPortfolio.positions || {});
-        setOpenOrders(currentPortfolio.Orders || []);
-
-        return () => {
-            userPortfolio.unsubscribe(handlePortfolioUpdate);
-        };
-    }, []);
+    const portfolio = usePortfolio();
+    const positions = portfolio?.positions || {};
+    const openOrders = useMemo(() => portfolio?.Orders || [], [portfolio]);
 
     const handleRemoveOrder = (orderId) => {
         log.info('Removing order', { orderId });

@@ -1,84 +1,11 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PriceLevelWidget from './PriceLevelWidgets';
 import './OrderBookWidgets.css';
-import orderBookInstance from '../HelperClasses/OrderBook'; // Import the OrderBook singleton
 import { truncateDecimal } from '../util/math'; // Import the truncateDecimal function
-import { createLogger } from '../util/logger';
-
-const log = createLogger('OrderBookWidget');
+import { useOrderBook } from '../providers';
 
 const OrderBookWidget = ({ selectedStock }) => {
-    const [stockData, setStockData] = useState({ bidVolumes: {}, askVolumes: {} });
-    const [hasOrderBook, setHasOrderBook] = useState(false);
-
-    // Debugging: Log when the component renders or updates
-    //console.log(`🔄 Component rendered for selectedStock: ${selectedStock}`);
-
-    const updateStockData = useCallback(
-        (orderBooks) => {
-            // Debugging: Log the data being received
-            //console.log("📈 updateStockData called with:", orderBooks);
-
-            if (orderBooks[selectedStock]) {
-                //console.log(`✅ Found data for selectedStock: ${selectedStock}`);
-                //console.log("🔹 Updated bidVolumes:", orderBooks[selectedStock].bidVolumes);
-                //console.log("🔹 Updated askVolumes:", orderBooks[selectedStock].askVolumes);
-
-                setStockData({
-                    bidVolumes: { ...orderBooks[selectedStock].bidVolumes },
-                    askVolumes: { ...orderBooks[selectedStock].askVolumes },
-                });
-                setHasOrderBook(true);
-            } else {
-                log.debug('No order book data found for selectedStock', { selectedStock });
-                setStockData({ bidVolumes: {}, askVolumes: {} });
-                setHasOrderBook(false);
-            }
-        },
-        [selectedStock],
-    );
-
-    useEffect(() => {
-        // Subscribe to order book updates
-        log.debug('Subscribing to order book updates', { selectedStock });
-        orderBookInstance.subscribe(updateStockData);
-
-        // Initialize with current data
-        if (orderBookInstance.orderBooks[selectedStock]) {
-            //console.log(`📊 Initial data found for selectedStock: ${selectedStock}`);
-            //console.log("🔹 Initial bidVolumes:", orderBookInstance.orderBooks[selectedStock].bidVolumes);
-            //console.log("🔹 Initial askVolumes:", orderBookInstance.orderBooks[selectedStock].askVolumes);
-
-            setStockData({
-                bidVolumes: { ...orderBookInstance.orderBooks[selectedStock].bidVolumes },
-                askVolumes: { ...orderBookInstance.orderBooks[selectedStock].askVolumes },
-            });
-            setHasOrderBook(true);
-        } else {
-            log.debug('No initial order book data for selectedStock', { selectedStock });
-            setStockData({ bidVolumes: {}, askVolumes: {} });
-            setHasOrderBook(false);
-        }
-
-        // Cleanup: Unsubscribe on unmount or stock change
-        return () => {
-            log.debug('Unsubscribing from order book updates', { selectedStock });
-            orderBookInstance.unsubscribe(updateStockData); // Avoid memory leaks
-        };
-    }, [selectedStock, updateStockData]);
-
-    useEffect(() => {
-        // Periodically log the current stock data for debugging
-        const logInterval = setInterval(() => {
-            //console.log(`📊 Periodic log for selectedStock: ${selectedStock}`);
-            //console.log("🔹 Current bidVolumes:", stockData.bidVolumes);
-            //console.log("🔹 Current askVolumes:", stockData.askVolumes);
-        }, 5000);
-
-        return () => clearInterval(logInterval);
-    }, [selectedStock, stockData]);
-
-    const { bidVolumes = {}, askVolumes = {} } = stockData;
+    const { bidVolumes, askVolumes, hasOrderBook } = useOrderBook(selectedStock);
 
     const sortedBids = Object.entries(bidVolumes)
         .map(([price, quantity]) => ({ P: parseFloat(price), Q: quantity }))
