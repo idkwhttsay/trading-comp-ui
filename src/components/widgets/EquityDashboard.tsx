@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './EquityDashboard.css';
-import { getTickers } from '../../lib/api.js';
-import StockWidget from './StockWidget.js'; // Ensure StockWidget is imported
+import { getTickers } from '../../lib/api';
+import StockWidget from './StockWidget'; // Ensure StockWidget is imported
 import { createLogger } from '../../utils/logger';
 
 const log = createLogger('EquityDashboard');

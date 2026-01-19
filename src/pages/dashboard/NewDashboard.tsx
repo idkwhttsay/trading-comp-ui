@@ -4,17 +4,17 @@ import {
     LimitOrdersWidget,
     OrderType,
     SelectedStockWidget,
-} from '../../components/widgets/PlaceOrders.js';
-import MarketOrdersWidget from '../../components/widgets/MarketOrderWidget.js';
-import TradeTable from '../../components/widgets/NewTradeTable.js';
-import OrderBookWidget from '../../components/widgets/OrderBookWidgetss.js';
-import ChartWidget from '../../components/widgets/ChartWidget.js';
-import AuctionWidget from '../../components/widgets/AuctionWidget.js';
-import EquitiesDashboard from '../../components/widgets/EquityDashboard.js';
-import { getBuildupData, getTickers, HTTPStatusCodes } from '../../lib/api.js';
+} from '../../components/widgets/PlaceOrders';
+import MarketOrdersWidget from '../../components/widgets/MarketOrderWidget';
+import TradeTable from '../../components/widgets/NewTradeTable';
+import OrderBookWidget from '../../components/widgets/OrderBookWidgetss';
+import ChartWidget from '../../components/widgets/ChartWidget';
+import AuctionWidget from '../../components/widgets/AuctionWidget';
+import EquitiesDashboard from '../../components/widgets/EquityDashboard';
+import { getBuildupData, getTickers, HTTPStatusCodes } from '../../lib/api';
 import MessageViewer from '../../components/widgets/MessageViewer';
-import PnLWidget from '../../components/widgets/PnLWidget.js';
-import RealizedPnLWidget from '../../components/widgets/realisedPnLWidget.js';
+import PnLWidget from '../../components/widgets/PnLWidget';
+import RealizedPnLWidget from '../../components/widgets/realisedPnLWidget';
 import Profile from '../../components/widgets/Profile';
 import { useNavigate } from 'react-router-dom';
 

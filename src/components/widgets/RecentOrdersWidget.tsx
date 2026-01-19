@@ -26,7 +26,7 @@ const RecentOrdersWidget = ({ orders }) => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="4" style={{ textAlign: 'center' }}>
+                            <td colSpan={4} style={{ textAlign: 'center' }}>
                                 No orders available for this stock.
                             </td>
                         </tr>

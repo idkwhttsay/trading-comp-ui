@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './Dashboard.css';
-import AuthenticationInput from '../../components/widgets/AuthenticationInput.js';
+import AuthenticationInput from '../../components/widgets/AuthenticationInput';
 import samplePnlData from '../../SampleData/samplePnlData.json';
 import { getTickers } from '../../lib/api';
 import { createLogger } from '../../utils/logger';
