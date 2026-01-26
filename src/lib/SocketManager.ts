@@ -1,4 +1,5 @@
 import { Client } from '@stomp/stompjs';
+import { z } from 'zod';
 import { fetchSnapshot, fetchUpdateBySeq, getBuildupData, HTTPStatusCodes } from './api';
 import orderBookInstance from './OrderBook';
 import userPortfolio from './UserPortfolio';
@@ -22,6 +23,15 @@ const TOPICS = Object.freeze({
     CHART: '/topic/chart',
 });
 
+type OrderBookUpdates = z.infer<typeof OrderBookUpdatesSchema>;
+
+type AppliedOrderBookUpdate = {
+    seq: number;
+    source: 'ws' | 'rest';
+    updates: OrderBookUpdates;
+    appliedAt: number;
+};
+
 function buildBrokerUrl({ sessionToken, username }) {
     const base = getWsBaseUrl();
     const url = new URL(base);
@@ -37,9 +47,12 @@ class SocketManager {
 
     private lastAppliedSeq: number | null;
     private seqBuffer: SeqBuffer;
-    private pendingBySeq: Map<number, unknown>;
+    private pendingBySeq: Map<number, OrderBookUpdates>;
     private gapFillInProgress: boolean;
     private needsResnapshot: boolean;
+
+    private appliedUpdates: AppliedOrderBookUpdate[];
+    private maxAppliedUpdates: number;
 
     constructor() {
         this.stompClient = null;
@@ -51,6 +64,10 @@ class SocketManager {
         this.pendingBySeq = new Map();
         this.gapFillInProgress = false;
         this.needsResnapshot = false;
+
+        // Buffer of applied updates (for debugging / replay / UI introspection)
+        this.appliedUpdates = [];
+        this.maxAppliedUpdates = 1000;
     }
 
     isReady() {
@@ -241,12 +258,23 @@ class SocketManager {
         }
     }
 
-    markApplied(seq) {
+    markApplied(seq: number, updates: OrderBookUpdates, source: AppliedOrderBookUpdate['source']) {
         this.seqBuffer.add(seq);
         this.lastAppliedSeq = seq;
+
+        this.appliedUpdates.push({
+            seq,
+            source,
+            updates,
+            appliedAt: Date.now(),
+        });
+
+        if (this.appliedUpdates.length > this.maxAppliedUpdates) {
+            this.appliedUpdates.splice(0, this.appliedUpdates.length - this.maxAppliedUpdates);
+        }
     }
 
-    async applyWithGapFill(incomingSeq, updates) {
+    async applyWithGapFill(incomingSeq: number, updates: OrderBookUpdates) {
         // If we somehow receive an older seq, just dedupe/skip.
         if (this.lastAppliedSeq !== null && incomingSeq <= this.lastAppliedSeq) {
             this.seqBuffer.add(incomingSeq);
@@ -267,17 +295,23 @@ class SocketManager {
                 }
             }
 
+            // If we resnapshotted during gap fill, the snapshot may already include this incoming update.
+            if (this.lastAppliedSeq !== null && incomingSeq <= this.lastAppliedSeq) {
+                this.seqBuffer.add(incomingSeq);
+                return;
+            }
+
             // Apply the incoming websocket update.
             if (!this.seqBuffer.has(incomingSeq)) {
                 orderBookInstance.updateVolumes(updates);
-                this.markApplied(incomingSeq);
+                this.markApplied(incomingSeq, updates, 'ws');
             }
         } finally {
             this.gapFillInProgress = false;
         }
     }
 
-    async fetchAndApplyMissingSeq(seq) {
+    async fetchAndApplyMissingSeq(seq: number) {
         const resp = await fetchUpdateBySeq(seq);
         if (!resp || resp.status !== HTTPStatusCodes.OK) {
             return false;
@@ -302,7 +336,7 @@ class SocketManager {
 
         if (!this.seqBuffer.has(seq)) {
             orderBookInstance.updateVolumes(validatedUpdates);
-            this.markApplied(seq);
+            this.markApplied(seq, validatedUpdates, 'rest');
         }
         return true;
     }
@@ -346,6 +380,7 @@ class SocketManager {
             this.lastAppliedSeq = latestSeq;
             this.seqBuffer.clear();
             this.pendingBySeq.clear();
+            this.appliedUpdates.length = 0;
         } catch (e) {
             log.warn('Resnapshot failed', { reason, error: e });
         }
@@ -357,7 +392,9 @@ class SocketManager {
             const nextSeq = this.lastAppliedSeq + 1;
             const nextUpdates = this.pendingBySeq.get(nextSeq);
             this.pendingBySeq.delete(nextSeq);
-            await this.applyWithGapFill(nextSeq, nextUpdates);
+            if (nextUpdates) {
+                await this.applyWithGapFill(nextSeq, nextUpdates);
+            }
         }
     }
 
